@@ -1,40 +1,45 @@
 <script context="module">
 	import { operationStore, query } from '@urql/svelte';
 
-	export async function load() {
-		const columnsQuery = operationStore(`
-    query getAllColumns {
-    allColumns {
-      data {
-        _id
-        title
-        cards {
-          data {
-            _id
-            title
-            description
-          }
-        }
-      }
-    }
-  }
-  `);
-
-		return {
-			props: {
-				allColumns: columnsQuery
-			}
-		};
-	}
+	const board = operationStore(
+		`
+    	query boardByUserId($userId: String!) {
+				boardByUserId(userId: $userId) {
+					data {
+						_id
+						title
+						description
+						locked
+						columns {
+							data {
+								_id
+								title
+								description
+								weight
+								cards {
+									data {
+										_id
+										title
+										description
+										weight
+									}
+								}
+							}
+						}
+					}
+				}
+			}`,
+		{ userId: '293327431033422337' }
+	);
 </script>
 
 <script>
-	export let allColumns;
-	query(allColumns)
-	console.log(allColumns)
-/*	let columns;
-	$: columns =  allColumns.data
-	console.log(columns);*/
+	// export let board;
+	query(board);
+	console.log(board);
+	let b;
+	$: b =  $board
+	console.log(b);
 </script>
 
 <div class="flex-1 min-w-0 flex flex-col bg-white mt-4">
@@ -157,49 +162,51 @@
 			</div>
 		</header>
 	</div>
-	{#if !allColumns.data}
+	{#if $board.fetching}
 		Loading columns...
+	{:else if $board.error}
+		<p>Oh no... {$board.error.message}</p>
 	{:else}
 		<div class="flex-1 overflow-auto">
 			<main class="p-3 inline-flex">
-				<div class="p-3 w-80 bg-gray-100 rounded-md">
-					<h3 class="text-sm font-medium text-gray-900">{allColumns.data.allColumns[0].title }</h3>
-					<ul class="mt-2">
-						{#each allColumns.data.allColumns[0].cards.data as card }
-							<li class="block p-5 rounded-md shadow bg-white my-2">
-								<a href="#">
-									<div class="flex justify-between">
-										<p class="text-sm font-medium text-gray-900 leading-snug">
-											{card.description}
-										</p>
-										<span
-										><img
-											class="h-6 w-6 rounded-full object-cover"
-											src="/img/jpg/user1.jpg"
-											alt=""
-										/></span
-										>
-									</div>
-									<div class="flex justify-between items-baseline">
-										<div class="text-sm text-gray-600 mt-2">
-											<time datetime="2019-09-14">2019-09-14</time>
+				{#each $board.data.boardByUserId.data[0].columns.data as column}
+					<div class="p-3 w-80 bg-gray-100 rounded-md">
+						<h3 class="text-sm font-medium text-gray-900">{column.title}</h3>
+						<ul class="mt-2">
+							{#each column.cards.data as card}
+								<li class="block p-5 rounded-md shadow bg-white my-2">
+									<a href="#">
+										<div class="flex justify-between">
+											<p class="text-sm font-medium text-gray-900 leading-snug">
+												{card.description}
+											</p>
+											<span
+												><img
+													class="h-6 w-6 rounded-full object-cover"
+													src="/img/jpg/user1.jpg"
+													alt=""
+												/></span
+											>
 										</div>
-										<div>
-									<span class="px-2 py-1 leading-tight flex items-center bg-red-200">
-										<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
-											<circle cx="4" cy="4" r="3" />
-										</svg>
-										<span class="ml-2 text-sm font-medium text-green-900 rounded"
-										>Bug</span
-										>
-									</span>
+										<div class="flex justify-between items-baseline">
+											<div class="text-sm text-gray-600 mt-2">
+												<time datetime="2019-09-14">2019-09-14</time>
+											</div>
+											<div>
+												<span class="px-2 py-1 leading-tight flex items-center bg-red-200">
+													<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
+														<circle cx="4" cy="4" r="3" />
+													</svg>
+													<span class="ml-2 text-sm font-medium text-green-900 rounded">Bug</span>
+												</span>
+											</div>
 										</div>
-									</div>
-								</a>
-							</li>
-						{/each}
-					</ul>
-				</div>
+									</a>
+								</li>
+							{/each}
+						</ul>
+					</div>
+				{/each}
 			</main>
 		</div>
 	{/if}
