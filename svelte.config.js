@@ -1,4 +1,5 @@
 import preprocess from 'svelte-preprocess';
+import adapter from '@sveltejs/adapter-netlify';
 // eslint-disble-next-line @typescript-eslint/no-var-requires
 // import pkg  from './package.json';
 
@@ -14,6 +15,7 @@ const config = {
 
 	kit: {
 		// hydrate the <div id="svelte"> element in src/app.html
+		adapter: adapter(),
 		target: '#svelte',
 		vite: {
 			resolve: {

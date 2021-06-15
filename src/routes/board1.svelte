@@ -1,4 +1,4 @@
-<script context="module">
+<script>
 	import { operationStore, query } from '@urql/svelte';
 
 	const board = operationStore(
@@ -31,10 +31,6 @@
 			}`,
 		{ userId: '293327431033422337' }
 	);
-</script>
-
-<script>
-	// export let board;
 	query(board);
 	console.log(board);
 	let b;
