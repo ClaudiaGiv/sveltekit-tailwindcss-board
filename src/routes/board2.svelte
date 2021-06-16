@@ -1,5 +1,5 @@
 <script context='module'>
-	/*export async function load({ fetch }) {
+	export async function load({ fetch }) {
 		const res = await fetch('/api/board2');
 		console.log("----res---");
 		console.log(res);
@@ -12,9 +12,9 @@
 			status: res.status,
 			error: new Error()
 		};
-	}*/
+	}
 	//2. fetch netlify
-	export async function load({ fetch }) {
+	/*export async function load({ fetch }) {
 		let data;
 		const uri = '/.netlify/functions/board2';
 		let response = await fetch(uri,
@@ -27,7 +27,7 @@
 		// data = await response.json();
 		// console.log('data')
 		// console.log(data)
-	}
+	}*/
 </script>
 
 <script>
