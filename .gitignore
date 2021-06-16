@@ -5,3 +5,6 @@ node_modules
 vcs.xml
 *.iml
 .idea
+
+# Local Netlify folder
+.netlify

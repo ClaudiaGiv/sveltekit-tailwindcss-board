@@ -16,6 +16,7 @@
 <script>
 	//1. from load function - fetch endpoint
 	export let board2;
+	console.log('board2');
 	console.log(board2);
 
 	//2. fetch netlify
@@ -29,6 +30,7 @@
 			}
 		);
 		data = await response.json();
+		console.log('data')
 		console.log(data)
 	}
 
