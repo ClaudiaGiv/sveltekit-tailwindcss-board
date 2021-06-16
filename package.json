@@ -1,8 +1,9 @@
 {
 	"name": "~TODO~",
+	"type": "module",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "svelte-kit dev --port 8081",
+		"dev": "svelte-kit dev --port 8080",
 		"build": "svelte-kit build",
 		"preview": "svelte-kit preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
@@ -33,11 +34,11 @@
 		"@urql/devtools": "^2.0.3",
 		"vite": "^2.1.0"
 	},
-	"type": "module",
 	"dependencies": {
 		"@urql/core": "^2.0.0",
 		"@urql/exchange-request-policy": "^0.1.1",
 		"@urql/svelte": "^1.2.2",
-		"graphql": "^15.5.0"
+		"graphql": "^15.5.0",
+		"isomorphic-unfetch": "^3.1.0"
 	}
 }

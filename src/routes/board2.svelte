@@ -1,6 +1,8 @@
 <script context='module'>
-	export async function load({ fetch }) {
-		const res = await fetch('/api/board');
+	/*export async function load({ fetch }) {
+		const res = await fetch('/api/board2');
+		console.log("----res---");
+		console.log(res);
 
 		if (res.ok)
 			return {
@@ -10,18 +12,33 @@
 			status: res.status,
 			error: new Error()
 		};
+	}*/
+	//2. fetch netlify
+	export async function load({ fetch }) {
+		let data;
+		const uri = '/.netlify/functions/board2';
+		let response = await fetch(uri,
+			{
+				method: 'GET'
+			}
+		);
+		console.log('response+++++')
+		console.log(await response)
+		// data = await response.json();
+		// console.log('data')
+		// console.log(data)
 	}
 </script>
 
 <script>
 	//1. from load function - fetch endpoint
-	export let board2;
-	console.log('board2');
-	console.log(board2);
+	// export let board2;
+	// console.log('board2');
+	// console.log(board2);
 
 	//2. fetch netlify
-	let data;
-	const uri = '/.netlify/functions/board';
+/*	let data;
+	const uri = '/.netlify/functions/board2';
 
 	async function getData() {
 		let response = await fetch(uri,
@@ -32,7 +49,7 @@
 		data = await response.json();
 		console.log('data')
 		console.log(data)
-	}
+	}*/
 
 	//3. direct graphql query to fauna
 	import { operationStore, query } from '@urql/svelte';
