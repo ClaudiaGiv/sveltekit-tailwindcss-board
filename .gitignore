@@ -7,4 +7,4 @@ vcs.xml
 .idea
 
 # Local Netlify folder
-.netlify
+#.netlify
