@@ -1,8 +1,6 @@
-import { page } from '$app/stores';
-
 export async function get() {
-	let response1;
-	fetch('https://www.learnwithjason.dev/graphql', {
+	let response;
+	await fetch('https://www.learnwithjason.dev/graphql', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -26,23 +24,13 @@ export async function get() {
 			}
 		})
 	})
-		.then((res) => {
-			console.log('res');
-			console.log(res);
-
-			console.log(res.json());
-			return res.json();
-		})
+		.then((res) => res.json())
 		.then((result) => {
-			response1 = result.data
-			console.log('result');
+			response = result;
 			console.log(result);
-			// return {
-			// 	result
-			// };
 		});
 
 	return {
-		body: response1
+		body: response
 	};
 }

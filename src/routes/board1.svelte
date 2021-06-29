@@ -1,41 +1,23 @@
-<script>
-	import { operationStore, query } from '@urql/svelte';
+<script context='module'>
+	export async function load({ fetch }) {
+		const res = await fetch('/api/board1');
 
-	const board = operationStore(
-		`
-    	query boardByUserId($userId: String!) {
-				boardByUserId(userId: $userId) {
-					data {
-						_id
-						title
-						description
-						locked
-						columns {
-							data {
-								_id
-								title
-								description
-								weight
-								cards {
-									data {
-										_id
-										title
-										description
-										weight
-									}
-								}
-							}
-						}
-					}
-				}
-			}`,
-		{ userId: '293327431033422337' }
-	);
-	query(board);
-	console.log(board);
-	let b;
-	$: b =  $board
-	console.log(b);
+		if (res.ok) {
+			return {
+				props: { board: await res.json() }
+			};
+		}
+		return {
+			status: res.status,
+			error: new Error()
+		};
+	}
+</script>
+<script>
+	export let board;
+	console.log(board)
+
+
 </script>
 
 <div class="flex-1 min-w-0 flex flex-col bg-white mt-4">
@@ -158,14 +140,14 @@
 			</div>
 		</header>
 	</div>
-	{#if $board.fetching}
+	{#if board.fetching}
 		Loading columns...
-	{:else if $board.error}
-		<p>Oh no... {$board.error.message}</p>
+	{:else if board.error}
+		<p>Oh no... {board.error.message}</p>
 	{:else}
 		<div class="flex-1 overflow-auto">
 			<main class="p-3 inline-flex">
-				{#each $board.data.boardByUserId.data[0].columns.data as column}
+				{#each board.data.boardByUserId.data[0].columns.data as column}
 					<div class="p-3 w-80 bg-gray-100 rounded-md">
 						<h3 class="text-sm font-medium text-gray-900">{column.title}</h3>
 						<ul class="mt-2">
