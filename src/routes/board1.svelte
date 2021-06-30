@@ -1,4 +1,5 @@
 <script context='module'>
+	console.log("before load")
 	export async function load({ fetch }) {
 		const res = await fetch('/api/board1');
 		console.log("here")
