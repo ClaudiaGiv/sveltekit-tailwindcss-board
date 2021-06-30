@@ -2,7 +2,7 @@
 	export async function load({ page, fetch }) {
 		console.log('page')
 		console.log(page.host)
-		const res = await fetch('/api/board3');
+		const res = await fetch('/api/board2');
 
 		if (res.ok) {
 			return {

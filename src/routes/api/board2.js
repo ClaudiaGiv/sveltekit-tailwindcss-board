@@ -1,48 +1,62 @@
-import { page } from '$app/stores';
+import { FAUNA_API, FAUNA_KEY } from './board1';
 
 export async function get() {
-	let response1;
-	fetch('https://www.learnwithjason.dev/graphql', {
+	let query = `
+    	query boardByUserId($userId: String!) {
+				boardByUserId(userId: $userId) {
+					data {
+						_id
+						title
+						description
+						locked
+						columns {
+							data {
+								_id
+								title
+								description
+								weight
+								cards {
+									data {
+										_id
+										title
+										description
+										weight
+									}
+								}
+							}
+						}
+					}
+				}
+			}`;
+	const variables = { userId: '293327431033422337' };
+	let response;
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	await fetch(FAUNA_API,  {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			'Authorization':
+			FAUNA_KEY
 		},
 		body: JSON.stringify({
-			query: `
-        query GetLearnWithJasonEpisodes($now: DateTime!) {
-          allEpisode(limit: 10, sort: {date: ASC}, where: {date: {gte: $now}}) {
-            date
-            title
-            guest {
-              name
-              twitter
-            }
-            description
-          }
-        }
-      `,
-			variables: {
-				now: new Date().toISOString()
-			}
+			query,
+			variables
 		})
 	})
-		.then((res) => {
-			console.log('res');
-			console.log(res);
-
-			console.log(res.json());
-			return res.json();
-		})
+		.then((res) => res.json())
 		.then((result) => {
-			response1 = result.data
+			response = result;
 			console.log('result');
 			console.log(result);
-			// return {
-			// 	result
-			// };
+		})
+		.catch((e) => {
+			console.log(e);
 		});
 
+	console.log('response');
+	console.log(response);
 	return {
-		body: response1
+		body: response
 	};
 }

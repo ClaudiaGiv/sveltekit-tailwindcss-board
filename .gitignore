@@ -8,3 +8,4 @@ vcs.xml
 
 # Local Netlify folder
 #.netlify
+.env
