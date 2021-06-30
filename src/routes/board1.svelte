@@ -1,6 +1,7 @@
 <script context='module'>
 	export async function load({ fetch }) {
 		const res = await fetch('/api/board1');
+		console.log("here")
 
 		if (res.ok) {
 			return {

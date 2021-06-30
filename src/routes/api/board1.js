@@ -1,3 +1,5 @@
+export const FAUNA_API = import.meta.env.VITE_FAUNA_API;
+export const FAUNA_KEY = import.meta.env.VITE_FAUNA_KEY;
 export async function get() {
 	let query = `
     	query boardByUserId($userId: String!) {
@@ -28,12 +30,16 @@ export async function get() {
 			}`;
 	const variables = { userId: '293327431033422337' };
 	let response;
-	await fetch('https://graphql.fauna.com/graphql', {
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	await fetch(FAUNA_API, {
 		method: 'POST',
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization:
-				'Basic Zm5BRHdGUEMtb0FDQUxlMmV2cUpMNUh1dGtJbU5kLW5oWlh0d1NoeTpQZXJzb25hbEthbmJhbjpzZXJ2ZXI='
+			'Authorization':
+			FAUNA_KEY
 		},
 		body: JSON.stringify({
 			query,
