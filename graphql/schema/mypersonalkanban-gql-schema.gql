@@ -1,0 +1,112 @@
+enum TimeUnit {
+    SECONDS
+    MINUTES
+    HOURS
+    DAYS
+    WEEKS
+    MONTHS
+    YEARS
+    CENTURIES
+    MILLENIUM
+    EPOCS
+    ERAS
+    EONS
+}
+
+
+enum Role {
+    ADMIN
+    USER
+}
+
+
+enum WorkState {
+    ACTIVE
+    BACKLOG
+    COMPLETE
+    WAIT_INTERNAL
+    WAIT_EXTERNAL
+}
+
+enum ColumnType {
+    COLUMN
+}
+
+enum RowType {
+    ROW
+}
+
+
+type  Duration {
+    time: Int
+    unit: TimeUnit
+}
+
+type User {
+    name: String
+    email: String! @unique
+    roles: [Role]
+    identityId: String
+    organization: Organization @relation(name: "organization_users")
+    authenticated: Boolean
+    team: Team
+}
+
+type  Organization {
+    name: String!
+    admins: [User]
+    users: [User] @relation(name: "organization_users")
+    teams: [Team] @relation(name: "organization_teams")
+}
+
+type Team {
+    name: String! @unique
+    organization: Organization @relation(name: "organization_teams")
+    users: [User] @relation
+}
+
+type Board {
+    title: String
+    description: String
+    columns: [Column] @relation
+    user: User
+    locked: Boolean
+}
+
+type Column {
+    title: String
+    description: String
+    columnType: ColumnType
+    cards: [Card] @relation
+    board: Board
+    wip: Int
+    wipLimit: Int
+    weight: Int
+}
+
+
+type Card {
+    title: String
+    description: String
+    url: String
+    board: Board
+    column: Column
+    startDate: Int
+    comments: [String]
+    primaryLabel: String
+    weight: Int
+}
+
+
+type Query {
+    allBoards: [Board!]!
+    allCards: [Card!]!
+    allColumns: [Column!]!
+    allUsers: [User]!
+    allTeams: [Team]!
+    allOrganizations: [Organization]!
+    findBoardByTitle(title: String!): Board
+    findTeamByName(name: String!): Team
+    findOrganizationByName(name: String!): Team
+    boardByUserId(userId: String!): Board! @resolver(name: "boardByUserId", paginated: true)
+}

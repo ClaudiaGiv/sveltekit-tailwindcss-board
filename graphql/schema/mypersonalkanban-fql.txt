@@ -1,0 +1,56 @@
+//INDEX: Board by title
+CreateIndex({
+  name: "board_by_title",
+  source: Collection("Board"),
+  terms: [
+    { field: ["data", "title"]}
+  ],
+  values: [
+    { field: ["ref"]}
+  ]
+  
+//INDEX: Columns by board, order by weight
+CreateIndex({
+  name: "all_columns_by_board_order_by_weight",
+  source: Collection("Column"),
+  terms: [
+    { field: ["data", "board"]}
+  ],
+    values: [
+    { field: ["data", "weight"]},
+    { field: ["ref"]}
+  ]
+})
+
+//INDEX: Cards by column, oder by weight
+CreateIndex({
+  name: "all_cards_by_column_order_by_weight",
+  source: Collection("Card"),
+  terms: [
+    { field: ["data", "column"]}
+  ],
+    values: [
+    { field: ["data", "weight"]},
+    { field: ["ref"]}
+  ]
+})
+
+//INDEX: board by user id
+CreateIndex({
+  name: "board_by_user_id",
+  source: Collection("Board"),
+  terms: [
+    { field: ["data", "user", "id"]}
+  ]
+})
+
+//UDF: board by user id
+Query(
+  Lambda(
+    ["userId", "size", "after", "before"],
+    Map(
+      Paginate(Match(Index("board_by_user_id"), Var("userId"))),
+      Lambda("board", Get(Var("board")))
+    )
+  )
+)

@@ -147,12 +147,3 @@ export async function get() {
 		}
 	};
 }
-
-export async function fetchBoard() {
-	const uri = '/.netlify/functions/board'
-	let response = await fetch(uri,
-		{method : 'GET' }
-	);
-	let data = await response.json();
-	return data;
-}

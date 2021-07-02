@@ -1,8 +1,8 @@
-<script context='module'>
-	console.log("before load")
+<script context="module">
+	console.log('before load');
 	export async function load({ fetch }) {
-		const res = await fetch('/api/board1');
-		console.log("here")
+		const res = await fetch('/api/board1?userId=293327431033422337');
+		console.log('inside load');
 
 		if (res.ok) {
 			return {
@@ -15,11 +15,27 @@
 		};
 	}
 </script>
+
 <script>
 	export let board;
-	console.log(board)
+	console.log(board);
+	let result;
+	async function createCard() {
+		console.log('create card');
+		let card = {
+			title: 'Card1',
+			description: 'card1',
+			weight: 1,
+			columnId: '293327431558758913'
+		};
+		const res = await fetch('api/card', {
+			method: 'POST',
+			body: JSON.stringify(card)
+		});
 
-
+		const json = await res.json();
+		result = JSON.stringify(json);
+	}
 </script>
 
 <div class="flex-1 min-w-0 flex flex-col bg-white mt-4">
@@ -125,6 +141,7 @@
 						>
 					</span>
 					<button
+						on:click={createCard}
 						class="flex items-center mt-1 ml-5 px-4 py-2 font-medium text-sm text-white bg-gray-800 rounded-md hover:bg-gray-700"
 					>
 						<svg class="h-5 w-5" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"

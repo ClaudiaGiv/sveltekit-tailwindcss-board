@@ -1,13 +1,11 @@
 export const FAUNA_API = import.meta.env.VITE_FAUNA_API;
 export const FAUNA_KEY = import.meta.env.VITE_FAUNA_KEY;
-import { BOARD_BY_USER_QUERY, CREATE_DEFAULT_BOARD_MUTATION } from '../../../graphql/board';
+import { CREATE_CARD_MUTATION, UPDATE_CARD_MUTATION } from '../../../graphql/card';
 
-//TODO: how can I have multiple get functions in the same endpoint? is it needed?
-export async function get(req) {
-	console.log(req)
-	console.log(req.query)
-	let query = BOARD_BY_USER_QUERY;
-	const variables = { userId: '293327431033422337' };
+export async function post(req) {
+	let variables = JSON.parse(req.body);
+	console.log(variables);
+	const query = CREATE_CARD_MUTATION;
 	let response;
 	await fetch(FAUNA_API.toString(), {
 		method: 'POST',
@@ -37,7 +35,7 @@ export async function get(req) {
 	};
 }
 
-export async function post(req) {
+export async function put(req) {
 	let response;
 	await fetch(FAUNA_API.toString(), {
 		method: 'POST',
@@ -46,7 +44,7 @@ export async function post(req) {
 			Authorization: FAUNA_KEY.toString()
 		},
 		body: JSON.stringify({
-			query: CREATE_DEFAULT_BOARD_MUTATION,
+			query: UPDATE_CARD_MUTATION,
 			variables: JSON.parse(req.body)
 		})
 	})
@@ -57,6 +55,7 @@ export async function post(req) {
 		.catch((e) => {
 			console.log(e);
 		});
+
 	return {
 		body: response
 	};

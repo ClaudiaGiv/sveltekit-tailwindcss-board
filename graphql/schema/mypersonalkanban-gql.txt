@@ -1,0 +1,265 @@
+//MUTATION: create board
+mutation createBoard{
+  createBoard(
+    data: {
+      title: "Value Factory"
+      description: "Project work"
+      columns: {
+        create: [
+        {
+          title: "Backlog"
+          description: "backlog"
+          wip: 3
+          wipLimit: 5
+          cards: {
+            create: [
+              {
+              title: "User identity"
+          	  description: "netlify"
+            	}
+              {
+              title: "User auth"
+          	  description: "netlify"
+            	}
+          	]
+          }
+        }
+        {
+          title: "In Progress"
+          description: "in progress"
+          wip: 3
+          wipLimit: 5
+          cards: {
+            create: [{
+              title: "Fauna db results mapping"
+          	  description: "vuex"
+            }]
+          }
+        }]
+      }
+    }
+	)
+  {
+    _id
+    title
+    columns{
+      data {
+        title
+        cards {
+          data {
+            title
+          }
+        }
+      }
+    }
+  }
+}
+
+//QUERY: get all boards
+query allBoards{
+  allBoards {
+    data
+    {
+      _id
+      title
+      description
+      columns {
+        data{
+          _id
+          title
+          description
+          cards {
+            data {
+              _id
+              title
+              description
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+//QUERY: get board by title
+query boardByTile{
+  boardByTitle(title: "Value Factory")
+  {
+    description
+    columns{
+      data
+      {
+        title
+      }
+    }
+  }
+}
+
+//QUERY: get board by user id
+query boardByUserId{
+  boardByUserId(userId: "280016180652016134")
+  {
+    description
+    title
+  }
+}
+
+//QUERY: get board by id
+query boardById{
+  findBoardByID(id: 111)
+  {
+    _id
+  }
+}
+
+//QUERY: get all columns
+query allColumns{
+  allColumns{
+    data {
+      _id
+      title
+      description
+      cards {
+        data {
+          title
+        }
+      }
+    }
+  }
+}
+
+//QUERY: get all cards
+query allCards{
+  allCards {
+    data
+    {
+      _id
+      title
+      description
+    }
+  }
+}
+
+//MUTATION: delete board
+mutation deleteBoard {
+  deleteBoard(id: 277997047250944519)
+  {
+    _id
+  }
+}
+
+//MUTATION: delete column
+mutation deleteColumn {
+  deleteColumn(id: 277997718620602885)
+  {
+    _id
+  }
+}
+
+//MUTATION: delete card
+mutation deleteCard {
+  deleteCard(id: 277997718620602885)
+  {
+    _id
+  }
+}
+
+//MUTATION: update card
+mutation updateCard{
+  updateCard(
+    id:277997718612214277
+    data:{
+      title: "User Netlify"
+      column: {
+        connect: 277997199013446145
+      }
+    }
+  )
+  {
+    _id
+    title
+    column
+    {
+      title
+    }
+  }
+}
+
+//MUTATION: update card by moving it between columns
+mutation moveCard{
+    update1: updateColumn(
+        id:277997199034417665
+        data:{
+          cards: {
+            disconnect: 277997718612214277
+          }
+        }
+      )
+      {
+      _id
+      }
+       update2: updateColumn(
+        id: 277997199013446145
+        data:{
+          cards: {
+            connect: 277997718612214277
+          }
+        }
+      )
+      {
+      _id
+      }
+}
+
+//MUTATION: update multiple cards in a single mutation
+mutation updateCards{
+    update1: updateCard(
+        id:277997199026029057
+        data:{
+          description: "Netlify1 updated"
+        }
+      )
+      {
+      _id
+      }
+      update2: updateCard(
+        id:277997718612214277
+        data:{
+          description: "Netlify2 updated"
+        }
+      )
+      {
+      _id
+      }
+  		update3: updateCard(
+        id:277997718628991493
+        data:{
+          description: "Vuex updated"
+        }
+      )
+      {
+      _id
+      }
+}
+
+//MUTATION: update multiple columns in a single mutation
+mutation updateColumns{
+  update1: updateColumn(
+    id:277997199013446145
+    data:{
+      weight:1
+    }
+  )
+  {
+  _id
+  }
+   update2: updateColumn(
+    id: 277997199034417665
+    data:{
+      weight:2
+    }
+  )
+  {
+    _id
+  }
+}
