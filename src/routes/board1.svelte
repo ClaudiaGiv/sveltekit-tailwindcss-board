@@ -1,4 +1,4 @@
-<script context="module">
+<!--<script context="module">
 	console.log('before load');
 	export async function load({ fetch }) {
 		const res = await fetch('/api/board1?userId=293327431033422337');
@@ -14,16 +14,15 @@
 			error: new Error()
 		};
 	}
-</script>
-
+</script>-->
 <script>
-	export let board;
+	import board from '../stores/board';
 	console.log(board);
 	let result;
 	async function createCard() {
 		console.log('create card');
 		let card = {
-			title: 'Card1',
+			title: 'Card 1',
 			description: 'card1',
 			weight: 1,
 			columnId: '293327431558758913'
@@ -34,7 +33,13 @@
 		});
 
 		const json = await res.json();
-		result = JSON.stringify(json);
+		console.log(json);
+		const card1 = json.data.createCard;
+		console.log(card1);
+		board.addCard(card1);
+		console.log("board1.svelte -----")
+		console.log(board)
+		console.log($board)
 	}
 </script>
 
@@ -159,14 +164,14 @@
 			</div>
 		</header>
 	</div>
-	{#if board.fetching}
+	{#if $board.fetching}
 		Loading columns...
-	{:else if board.error}
-		<p>Oh no... {board.error.message}</p>
+	{:else if $board.error}
+		<p>Oh no... {$board.error.message}</p>
 	{:else}
 		<div class="flex-1 overflow-auto">
 			<main class="p-3 inline-flex">
-				{#each board.data.boardByUserId.data[0].columns.data as column}
+				{#each $board.columns.data as column}
 					<div class="p-3 w-80 bg-gray-100 rounded-md">
 						<h3 class="text-sm font-medium text-gray-900">{column.title}</h3>
 						<ul class="mt-2">
