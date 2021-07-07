@@ -19,6 +19,7 @@
 	import board from '../stores/board';
 	console.log(board);
 	let result;
+
 	async function createCard() {
 		console.log('create card');
 		let card = {
@@ -33,13 +34,12 @@
 		});
 
 		const json = await res.json();
-		console.log(json);
-		const card1 = json.data.createCard;
-		console.log(card1);
-		board.addCard(card1);
-		console.log("board1.svelte -----")
-		console.log(board)
-		console.log($board)
+		board.addCard(json.data.createCard);
+	}
+
+	async function removeCard(columnIndex, cardIndex) {
+		console.log('removed button clicked');
+		board.removeCard(columnIndex, cardIndex);
 	}
 </script>
 
@@ -171,11 +171,11 @@
 	{:else}
 		<div class="flex-1 overflow-auto">
 			<main class="p-3 inline-flex">
-				{#each $board.columns.data as column}
+				{#each $board.columns.data as column, columnIndex}
 					<div class="p-3 w-80 bg-gray-100 rounded-md">
 						<h3 class="text-sm font-medium text-gray-900">{column.title}</h3>
 						<ul class="mt-2">
-							{#each column.cards.data as card}
+							{#each column.cards.data as card, cardIndex}
 								<li class="block p-5 rounded-md shadow bg-white my-2">
 									<a href="#">
 										<div class="flex justify-between">
@@ -193,6 +193,16 @@
 										<div class="flex justify-between items-baseline">
 											<div class="text-sm text-gray-600 mt-2">
 												<time datetime="2019-09-14">2019-09-14</time>
+											</div>
+											<div>
+												<button
+													class="h-8 m-2 text-sm text-red-700 transition-colors rounded-lg hover:bg-red-100"
+													on:click={() => removeCard(columnIndex, cardIndex)}
+												>
+													<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+														<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+													</svg>
+												</button>
 											</div>
 											<div>
 												<span class="px-2 py-1 leading-tight flex items-center bg-red-200">

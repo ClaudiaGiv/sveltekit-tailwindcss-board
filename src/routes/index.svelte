@@ -1,4 +1,5 @@
 <script context="module">
+	import board from '../stores/board';
 
 	console.log('before load');
 	export async function load({ fetch }) {
@@ -7,9 +8,10 @@
 
 		if (res.ok) {
 			const json = await res.json();
-			return {
-				props: { board1: await json.data.boardByUserId.data[0]  }
-			};
+			const board1 = await json.data.boardByUserId.data[0]
+			console.log(board1)
+			board.set(board1);
+			return {};
 		}
 		return {
 			status: res.status,
@@ -18,14 +20,6 @@
 	}
 </script>
 
-<script>
-	import board from '../stores/board';
-	export let board1;
-	console.log("index")
-	console.log(board1)
-	board.set(board1)
-
-</script>
 
 <section>
 	<h1>Welcome to SvelteKit</h1>
@@ -34,4 +28,3 @@
 		the documentation
 	</p>
 </section>
-

@@ -6,14 +6,17 @@ const { subscribe, set, update } = writable(BOARD);
 
 const addCard = (card) =>
 	update((board) => {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
 		board.columns.data[0].cards.data.push(card);
-		console.log('inside store');
-		console.log(board);
-		// console.log(card);
-		console.log('------after  store');
+		return board;
+	});
 
+const removeCard = (columnIndex, cardIndex) =>
+	update((board) => {
+		console.log('remove card');
+		console.log(cardIndex);
+		console.log(board.columns.data[columnIndex].cards.data);
+		board.columns.data[columnIndex].cards.data.splice(cardIndex, 1);
+		console.log(board.columns.data[columnIndex].cards.data);
 		return board;
 	});
 
@@ -25,5 +28,6 @@ export default {
 	subscribe,
 	set,
 	addCard,
+	removeCard,
 	reset
 };
