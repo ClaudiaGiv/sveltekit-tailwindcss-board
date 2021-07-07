@@ -17,6 +17,35 @@
 </script>-->
 <script>
 	import board from '../stores/board';
+	import { dndzone } from 'svelte-dnd-action';
+	import { overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
+	overrideItemIdKeyNameBeforeInitialisingDndZones('_id');
+	import { flip } from 'svelte/animate';
+	let columnItems = $board.columns.data;
+	const flipDurationMs = 200;
+	function handleDndConsiderColumns(e) {
+		columnItems = e.detail.items;
+	}
+	function handleDndFinalizeColumns(e) {
+		columnItems = e.detail.items;
+	}
+	function handleDndConsiderCards(cid, e) {
+		const colIdx = columnItems.findIndex((c) => c.id === cid);
+		columnItems[colIdx].items = e.detail.items;
+		columnItems = [...columnItems];
+	}
+	function handleDndFinalizeCards(cid, e) {
+		const colIdx = columnItems.findIndex((c) => c.id === cid);
+		columnItems[colIdx].items = e.detail.items;
+		columnItems = [...columnItems];
+	}
+	function handleClick(e) {
+		alert('dragabble elements are still clickable :)');
+	}
+
+	function handleSort(e) {
+		$board.columns.data = e.detail.items;
+	}
 	console.log(board);
 	let result;
 
@@ -170,56 +199,95 @@
 		<p>Oh no... {$board.error.message}</p>
 	{:else}
 		<div class="flex-1 overflow-auto">
+			<!--			<section use:dndzone={{ items }} on:consider={handleSort} on:finalize={handleSort}>-->
 			<main class="p-3 inline-flex">
-				{#each $board.columns.data as column, columnIndex}
-					<div class="p-3 w-80 bg-gray-100 rounded-md">
-						<h3 class="text-sm font-medium text-gray-900">{column.title}</h3>
-						<ul class="mt-2">
-							{#each column.cards.data as card, cardIndex}
-								<li class="block p-5 rounded-md shadow bg-white my-2">
-									<a href="#">
-										<div class="flex justify-between">
-											<p class="text-sm font-medium text-gray-900 leading-snug">
-												{card.description}
-											</p>
-											<span
-												><img
-													class="h-6 w-6 rounded-full object-cover"
-													src="/img/jpg/user1.jpg"
-													alt=""
-												/></span
-											>
-										</div>
-										<div class="flex justify-between items-baseline">
-											<div class="text-sm text-gray-600 mt-2">
-												<time datetime="2019-09-14">2019-09-14</time>
-											</div>
-											<div>
-												<button
-													class="h-8 m-2 text-sm text-red-700 transition-colors rounded-lg hover:bg-red-100"
-													on:click={() => removeCard(columnIndex, cardIndex)}
-												>
-													<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-														<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-													</svg>
-												</button>
-											</div>
-											<div>
-												<span class="px-2 py-1 leading-tight flex items-center bg-red-200">
-													<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
-														<circle cx="4" cy="4" r="3" />
-													</svg>
-													<span class="ml-2 text-sm font-medium text-green-900 rounded">Bug</span>
-												</span>
-											</div>
-										</div>
-									</a>
-								</li>
-							{/each}
-						</ul>
-					</div>
-				{/each}
+				<section
+					class="board"
+					use:dndzone={{ items: columnItems, flipDurationMs, type: 'columns' }}
+					on:consider={handleDndConsiderColumns}
+					on:finalize={handleDndFinalizeColumns}
+				>
+					{#each columnItems as column, columnIndex}
+<!--						<div class="column" animate:flip={{ duration: flipDurationMs }}>-->
+							<div class="p-3 w-80 bg-gray-100 rounded-md">
+								<h3 class="text-sm font-medium text-gray-900">{column.title}</h3>
+								<ul class="mt-2">
+									<div
+										class="column-content"
+										use:dndzone={{ items: column.cards.data, flipDurationMs }}
+										on:consider={(e) => handleDndConsiderCards(column._id, e)}
+										on:finalize={(e) => handleDndFinalizeCards(column._id, e)}
+									>
+										{#each column.cards.data as card, cardIndex}
+<!--											<div-->
+<!--												class="card"-->
+<!--												animate:flip={{ duration: flipDurationMs }}-->
+<!--												on:click={handleClick}-->
+<!--											>-->
+												<li class="block p-5 rounded-md shadow bg-white my-2">
+													<a href="#">
+														<div class="flex justify-between">
+															<p class="text-sm font-medium text-gray-900 leading-snug">
+																{card.description}
+															</p>
+															<span
+																><img
+																	class="h-6 w-6 rounded-full object-cover"
+																	src="/img/jpg/user1.jpg"
+																	alt=""
+																/></span
+															>
+														</div>
+														<div class="flex justify-between items-baseline">
+															<div class="text-sm text-gray-600 mt-2">
+																<time datetime="2019-09-14">2019-09-14</time>
+															</div>
+															<div>
+																<button
+																	class="h-8 m-2 text-sm text-red-700 transition-colors rounded-lg hover:bg-red-100"
+																	on:click={() => removeCard(columnIndex, cardIndex)}
+																>
+																	<svg
+																		xmlns="http://www.w3.org/2000/svg"
+																		class="h-5 w-5"
+																		viewBox="0 0 20 20"
+																		fill="currentColor"
+																	>
+																		<path
+																			fill-rule="evenodd"
+																			d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+																			clip-rule="evenodd"
+																		/>
+																	</svg>
+																</button>
+															</div>
+															<div>
+																<span class="px-2 py-1 leading-tight flex items-center bg-red-200">
+																	<svg
+																		class="h-2 w-2 text-teal-500"
+																		viewbox="0 0 8 8"
+																		fill="currentColor"
+																	>
+																		<circle cx="4" cy="4" r="3" />
+																	</svg>
+																	<span class="ml-2 text-sm font-medium text-green-900 rounded"
+																		>Bug</span
+																	>
+																</span>
+															</div>
+														</div>
+													</a>
+												</li>
+<!--											</div>-->
+										{/each}
+									</div>
+								</ul>
+							</div>
+<!--						</div>-->
+					{/each}
+				</section>
 			</main>
+			<!--			</section>-->
 		</div>
 	{/if}
 </div>
