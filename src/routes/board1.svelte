@@ -20,7 +20,7 @@
 	import { dndzone } from 'svelte-dnd-action';
 	import { overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
 	overrideItemIdKeyNameBeforeInitialisingDndZones('_id');
-	import { flip } from 'svelte/animate';
+
 	let columnItems = $board.columns.data;
 	const flipDurationMs = 200;
 	function handleDndConsiderColumns(e) {
@@ -30,13 +30,13 @@
 		columnItems = e.detail.items;
 	}
 	function handleDndConsiderCards(cid, e) {
-		const colIdx = columnItems.findIndex((c) => c.id === cid);
-		columnItems[colIdx].items = e.detail.items;
+		const colIdx = columnItems.findIndex((c) => c._id === cid);
+		columnItems[colIdx].cards.data = e.detail.items;
 		columnItems = [...columnItems];
 	}
 	function handleDndFinalizeCards(cid, e) {
-		const colIdx = columnItems.findIndex((c) => c.id === cid);
-		columnItems[colIdx].items = e.detail.items;
+		const colIdx = columnItems.findIndex((c) => c._id === cid);
+		columnItems[colIdx].cards.data = e.detail.items;
 		columnItems = [...columnItems];
 	}
 	function handleClick(e) {
@@ -67,7 +67,6 @@
 	}
 
 	async function removeCard(columnIndex, cardIndex) {
-		console.log('removed button clicked');
 		board.removeCard(columnIndex, cardIndex);
 	}
 </script>
@@ -208,7 +207,6 @@
 					on:finalize={handleDndFinalizeColumns}
 				>
 					{#each columnItems as column, columnIndex}
-<!--						<div class="column" animate:flip={{ duration: flipDurationMs }}>-->
 							<div class="p-3 w-80 bg-gray-100 rounded-md">
 								<h3 class="text-sm font-medium text-gray-900">{column.title}</h3>
 								<ul class="mt-2">
@@ -219,11 +217,6 @@
 										on:finalize={(e) => handleDndFinalizeCards(column._id, e)}
 									>
 										{#each column.cards.data as card, cardIndex}
-<!--											<div-->
-<!--												class="card"-->
-<!--												animate:flip={{ duration: flipDurationMs }}-->
-<!--												on:click={handleClick}-->
-<!--											>-->
 												<li class="block p-5 rounded-md shadow bg-white my-2">
 													<a href="#">
 														<div class="flex justify-between">
@@ -278,12 +271,10 @@
 														</div>
 													</a>
 												</li>
-<!--											</div>-->
 										{/each}
 									</div>
 								</ul>
 							</div>
-<!--						</div>-->
 					{/each}
 				</section>
 			</main>

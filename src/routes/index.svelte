@@ -10,6 +10,7 @@
 			const json = await res.json();
 			const board1 = await json.data.boardByUserId.data[0]
 			console.log(board1)
+			console.log(JSON.stringify(board1))
 			board.set(board1);
 			return {};
 		}
