@@ -4,7 +4,11 @@
 	import { dndzone } from 'svelte-dnd-action';
 	import { overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
 	overrideItemIdKeyNameBeforeInitialisingDndZones('_id');
-
+	import Card from '$lib/Card/index.svelte';
+	let card = {
+		title: 'card1',
+		date: '12.1.1'
+	};
 	let columnItems = [
 		{
 			_id: 1,
@@ -82,71 +86,52 @@
 	}
 </script>
 
-<section
-	class="board"
-	use:dndzone={{ items: columnItems, flipDurationMs, type: 'columns' }}
-	on:consider={handleDndConsiderColumns}
-	on:finalize={handleDndFinalizeColumns}
->
-	{#each columnItems as column (column._id)}
-		<div class="column" animate:flip={{ duration: flipDurationMs }}>
-			<div class="column-title">{column.name}</div>
-			<div
-				class="column-content"
-				use:dndzone={{ items: column.items.data, flipDurationMs }}
-				on:consider={(e) => handleDndConsiderCards(column._id, e)}
-				on:finalize={(e) => handleDndFinalizeCards(column._id, e)}
-			>
-				{#each column.items.data as item (item._id)}
-					<div class="card" animate:flip={{ duration: flipDurationMs }} on:click={handleClick}>
-						{item.name}
+<div>
+	<div class="flex justify-center board">
+		<div
+			class="flex overflow-x-scroll py-12 px-6 board"
+			use:dndzone={{ items: columnItems, flipDurationMs, type: 'columns' }}
+			on:consider={handleDndConsiderColumns}
+			on:finalize={handleDndFinalizeColumns}
+		>
+			{#each columnItems as column (column._id)}
+				<div
+					class="bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4"
+					animate:flip={{ duration: flipDurationMs }}
+				>
+					<p class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{column.name}</p>
+					<!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
+					<div
+						use:dndzone={{ items: column.items.data, flipDurationMs }}
+						on:consider={(e) => handleDndConsiderCards(column._id, e)}
+						on:finalize={(e) => handleDndFinalizeCards(column._id, e)}
+					>
+						{#each column.items.data as item (item._id)}
+							<Card card={item} class=/>
+						{/each}
 					</div>
-				{/each}
-			</div>
+				</div>
+			{/each}
 		</div>
-	{/each}
-</section>
+	</div>
+</div>
 
 <style scoped>
-	.board {
-		height: 90vh;
-		width: 100%;
-		padding: 0.5em;
-		margin-bottom: 40px;
-	}
-
-	.column {
-		height: 100%;
-		width: 250px;
-		padding: 0.5em;
-		margin: 1em;
-		float: left;
-		border: 1px solid #333333;
-		/*Notice we make sure this container doesn't scroll so that the title stays on top and the dndzone inside is scrollable*/
-		overflow-y: hidden;
-	}
-
-	.column-content {
-		height: 100%;
-		/* Notice that the scroll container needs to be the dndzone if you want dragging near the edge to trigger scrolling */
-		overflow-y: scroll;
-	}
-
-	.column-title {
-		margin-bottom: 1em;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.card {
-		height: 15%;
-		width: 100%;
-		margin: 0.4em 0;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background-color: #dddddd;
-		border: 1px solid #333333;
-	}
+    .board {
+        height: 90vh;
+        width: 100%;
+        padding: 0.5em;
+        margin-bottom: 40px;
+    }
+    .column-width {
+        min-width: 320px;
+        width: 320px;
+    }
+    /* Unfortunately @apply cannot be setup in codesandbox,
+		but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
+    .ghost-card {
+        opacity: 0.5;
+        background: #F7FAFC;
+        border: 1px solid #4299e1;
+    }
 </style>
