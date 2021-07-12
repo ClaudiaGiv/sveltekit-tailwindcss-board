@@ -1,6 +1,5 @@
-import gql from "graphql-tag";
 
-export const CREATE_USER_MUTATION = gql`
+export const CREATE_USER_MUTATION = `
   mutation createUser(
     $email: String!
     $name: String!
@@ -24,7 +23,7 @@ export const CREATE_USER_MUTATION = gql`
   }
 `;
 
-export const USER_BY_EMAIL_QUERY = gql`
+export const USER_BY_EMAIL_QUERY = `
   query userByEmail($email: String!) {
     userByEmail(email: $email) {
       _id
@@ -36,7 +35,7 @@ export const USER_BY_EMAIL_QUERY = gql`
   }
 `;
 
-export const ALL_USERS_QUERY = gql`
+export const ALL_USERS_QUERY = `
   query allUsers {
     allUsers {
       data {

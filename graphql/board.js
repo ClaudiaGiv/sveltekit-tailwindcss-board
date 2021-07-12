@@ -1,6 +1,5 @@
-import gql from "graphql-tag";
 //
-// export const ALL_BOARDS_QUERY = gql`
+// export const ALL_BOARDS_QUERY = `
 //   query allBoards {
 //     allBoards {
 //       data {
@@ -57,7 +56,7 @@ export const CREATE_DEFAULT_BOARD_MUTATION = `
 `;
 
 //
-// export const BOARD_BY_TITLE_QUERY = gql`
+// export const BOARD_BY_TITLE_QUERY = `
 //   query boardByTitle($title: String!) {
 //     boardByTitle(title: $title) {
 //       _id
