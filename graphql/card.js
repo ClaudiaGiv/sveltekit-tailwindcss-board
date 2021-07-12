@@ -1,4 +1,3 @@
-import gql from "graphql-tag";
 
 export const CREATE_CARD_MUTATION = `
   mutation createCard(
@@ -23,7 +22,7 @@ export const CREATE_CARD_MUTATION = `
   }
 `;
 //
-// export const UPDATE_CARD_WEIGHT_MUTATION = gql`
+// export const UPDATE_CARD_WEIGHT_MUTATION = `
 //   mutation updateCard($id: ID!, $weight: Int!) {
 //     updateCard(id: $id, data: { weight: $weight }) {
 //       _id
@@ -31,7 +30,7 @@ export const CREATE_CARD_MUTATION = `
 //     }
 //   }
 // `;
-// export const UPDATE_CARD_WEIGHT_AND_COLUMN_MUTATION = gql`
+// export const UPDATE_CARD_WEIGHT_AND_COLUMN_MUTATION = `
 //   mutation updateCard($id: ID!, $weight: Int!, $columnId: ID!) {
 //     updateCard(
 //       id: $id
@@ -62,7 +61,7 @@ export const UPDATE_CARD_MUTATION = `
   }
 `;
 //
-// export const MOVE_CARD_MUTATION = gql`
+// export const MOVE_CARD_MUTATION = `
 //   mutation moveCard($fromColumnId: ID!, $toColumnId: ID!, $taskId: [ID]!) {
 //     update1: updateColumn(
 //       id: $fromColumnId

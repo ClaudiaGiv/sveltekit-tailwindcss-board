@@ -1,6 +1,5 @@
-import gql from "graphql-tag";
 
-export const CREATE_COLUMN_MUTATION = gql`
+export const CREATE_COLUMN_MUTATION = `
   mutation createColumn($title: String!, $description: String!) {
     createColumn(data: { title: $title, description: $description }) {
       _id
@@ -10,7 +9,7 @@ export const CREATE_COLUMN_MUTATION = gql`
   }
 `;
 
-export const UPDATE_COLUMN_WEIGHT_MUTATION = gql`
+export const UPDATE_COLUMN_WEIGHT_MUTATION = `
   mutation updateColumn($id: ID!, $weight: Int!) {
     updateColumn(id: $id, data: { weight: $weight }) {
       _id
@@ -19,7 +18,7 @@ export const UPDATE_COLUMN_WEIGHT_MUTATION = gql`
   }
 `;
 
-export const DELETE_COLUMN_MUTATION = gql`
+export const DELETE_COLUMN_MUTATION = `
   mutation deleteColumn($ID: ID!) {
     deleteColumn(id: $ID) {
       _id
@@ -29,7 +28,7 @@ export const DELETE_COLUMN_MUTATION = gql`
   }
 `;
 
-export const ALL_COLUMNS_QUERY = gql`
+export const ALL_COLUMNS_QUERY = `
   query allColumns {
     allColumns {
       data {
