@@ -9,3 +9,6 @@ vcs.xml
 # Local Netlify folder
 #.netlify
 .env
+
+# Local Netlify folder
+.netlify

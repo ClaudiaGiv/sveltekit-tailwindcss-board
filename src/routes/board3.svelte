@@ -42,39 +42,26 @@
 			}
 		}
 	];
-	console.log('column.items.data');
-	console.log(columnItems[1].items.data);
-	console.log(JSON.stringify(columnItems[0].items));
+
 	const flipDurationMs = 200;
 
 	function handleDndConsiderColumns(e) {
-		console.log('handleDndConsiderCards');
-		// console.log(e);
 		columnItems = e.detail.items;
 	}
 
 	function handleDndFinalizeColumns(e) {
-		console.log('handleDndFinalizeColumns');
-		// console.log(e);
 		columnItems = e.detail.items;
 	}
 
 	function handleDndConsiderCards(cid, e) {
-		console.log('handleDndConsiderCards');
-		// console.log(e);
 		const colIdx = columnItems.findIndex((c) => c._id === cid);
 		columnItems[colIdx].items.data = e.detail.items;
 		// columnItems = [...columnItems];
 	}
 
 	function handleDndFinalizeCards(cid, e) {
-		console.log('handleDndFinalizeCards');
-		// console.log(e);
 		const colIdx = columnItems.findIndex((c) => c._id === cid);
 		columnItems[colIdx].items.data = e.detail.items;
-		console.log(columnItems[0].items);
-		console.log(columnItems[1].items);
-		console.log(columnItems[1].items);
 		// columnItems = [...columnItems];
 	}
 
