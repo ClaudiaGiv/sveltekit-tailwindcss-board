@@ -73,52 +73,54 @@
 	}
 </script>
 
-<div>
-	<div class="flex justify-center board">
+<div
+	class="flex justify-center p-1 board my-1"
+	use:dndzone={{ items: columnItems, flipDurationMs, type: 'columns' }}
+	on:consider={handleDndConsiderColumns}
+	on:finalize={handleDndFinalizeColumns}
+>
+	{#each columnItems as column (column._id)}
 		<div
-			class="flex overflow-x-scroll py-12 px-6 board"
-			use:dndzone={{ items: columnItems, flipDurationMs, type: 'columns' }}
-			on:consider={handleDndConsiderColumns}
-			on:finalize={handleDndFinalizeColumns}
+			class="bg-gray-100 rounded-lg p-1 mx-1 rounded column"
+			animate:flip={{ duration: flipDurationMs }}
 		>
-			{#each columnItems as column (column._id)}
-				<div
-					class="bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4"
-					animate:flip={{ duration: flipDurationMs }}
-				>
-					<p class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{column.name}</p>
-					<!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
-					<div
-						use:dndzone={{ items: column.items.data, flipDurationMs }}
-						on:consider={(e) => handleDndConsiderCards(column._id, e)}
-						on:finalize={(e) => handleDndFinalizeCards(column._id, e)}
-					>
-						{#each column.items.data as item (item._id)}
-							<Card card={item} class=/>
-						{/each}
-					</div>
-				</div>
-			{/each}
+			<p class="text-gray-700 font-semibold font-sans tracking-wide p-1 text-sm">{column.name}</p>
+			<!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
+			<div
+				class="column-content py-1"
+				use:dndzone={{ items: column.items.data, flipDurationMs }}
+				on:consider={(e) => handleDndConsiderCards(column._id, e)}
+				on:finalize={(e) => handleDndFinalizeCards(column._id, e)}
+			>
+				{#each column.items.data as item (item._id)}
+					<Card card={item} class="" />
+				{/each}
+			</div>
 		</div>
-	</div>
+	{/each}
 </div>
 
-<style scoped>
-    .board {
-        height: 90vh;
-        width: 100%;
-        padding: 0.5em;
-        margin-bottom: 40px;
-    }
-    .column-width {
-        min-width: 320px;
-        width: 320px;
-    }
-    /* Unfortunately @apply cannot be setup in codesandbox,
-		but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
-    .ghost-card {
-        opacity: 0.5;
-        background: #F7FAFC;
-        border: 1px solid #4299e1;
-    }
+<style>
+	html,
+	body,
+	div {
+		overflow-y: hidden;
+	}
+	.board {
+		height: 85vh;
+		width: 100%;
+		overflow-y: hidden;
+	}
+	.column {
+		height: 100%;
+		width: 350px;
+		float: left;
+		/*Notice we make sure this container doesn't scroll so that the title stays on top and the dndzone inside is scrollable*/
+		overflow-y: hidden;
+	}
+	.column-content {
+		height: 100%;
+		/* Notice that the scroll container needs to be the dndzone if you want dragging near the edge to trigger scrolling */
+		overflow-y: auto;
+	}
 </style>

@@ -198,10 +198,8 @@
 		<p>Oh no... {$board.error.message}</p>
 	{:else}
 		<div class="flex-1 overflow-auto">
-			<!--			<section use:dndzone={{ items }} on:consider={handleSort} on:finalize={handleSort}>-->
-			<main class="p-3 inline-flex">
-				<section
-					class="board"
+<!--						<section use:dndzone={{ items }} on:consider={handleSort} on:finalize={handleSort}>-->
+			<main class="p-3 inline-flex board"
 					use:dndzone={{ items: columnItems, flipDurationMs, type: 'columns' }}
 					on:consider={handleDndConsiderColumns}
 					on:finalize={handleDndFinalizeColumns}
@@ -276,7 +274,6 @@
 								</ul>
 							</div>
 					{/each}
-				</section>
 			</main>
 			<!--			</section>-->
 		</div>
