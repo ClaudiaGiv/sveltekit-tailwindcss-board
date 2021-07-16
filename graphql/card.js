@@ -1,4 +1,3 @@
-
 export const CREATE_CARD_MUTATION = `
   mutation createCard(
     $title: String!
@@ -18,6 +17,15 @@ export const CREATE_CARD_MUTATION = `
       title
       description
       weight
+    }
+  }
+`;
+
+export const DELETE_CARD_MUTATION = `
+  mutation deleteCard($id: ID!) 
+  {
+    deleteCard(id: $id) {
+      _id
     }
   }
 `;
