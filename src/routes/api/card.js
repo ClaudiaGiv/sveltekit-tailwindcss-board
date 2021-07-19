@@ -4,7 +4,6 @@ import { CREATE_CARD_MUTATION, UPDATE_CARD_MUTATION, DELETE_CARD_MUTATION } from
 
 export async function post(req) {
 	let variables = JSON.parse(req.body);
-	console.log(variables);
 	const query = CREATE_CARD_MUTATION;
 	let response;
 	await fetch(FAUNA_API.toString(), {
@@ -25,17 +24,12 @@ export async function post(req) {
 		.catch((e) => {
 			console.log(e);
 		});
-
-	console.log('response');
-	console.log(response);
 	return {
 		body: response
 	};
 }
 
 export async function put(req) {
-	console.log("req")
-	console.log(req)
 	let response;
 	await fetch(FAUNA_API.toString(), {
 		method: 'POST',
@@ -50,7 +44,6 @@ export async function put(req) {
 	})
 		.then((res) => res.json())
 		.then((result) => {
-			console.log(result);
 			response = result.data.updateCard;
 		})
 		.catch((e) => {

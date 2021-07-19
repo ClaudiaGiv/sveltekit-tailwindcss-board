@@ -3,12 +3,13 @@
 
 	const dispatch = createEventDispatcher();
 	export let editableCard;
-	$: console.log(editableCard);
+	export let actionType;
+
 	function close() {
 		dispatch('close');
 	}
 	function save() {
-		dispatch('save', editableCard);
+		dispatch(actionType, editableCard);
 	}
 </script>
 

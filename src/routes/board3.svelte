@@ -6,13 +6,13 @@
 
 	overrideItemIdKeyNameBeforeInitialisingDndZones('_id');
 	import Card from '$lib/Card/index.svelte';
-	import CardUpdateDialog from '$lib/card-update-dialog.svelte';
+	import CardDialog from '$lib/card-dialog.svelte';
 	import board from '../stores/board';
-	let editableCard = { title: '', description: '' };
 
+	let editableCard = { title: '', description: '', weight: 1 };
+	let actionType = 'save';
 	let editableCardColIdx = -1;
 	let showModal1 = false;
-
 	const flipDurationMs = 200;
 
 	function handleDndConsiderColumns(e) {
@@ -26,27 +26,34 @@
 	function handleDndConsiderCards(cid, e) {
 		console.log('handleDndConsiderCards');
 		const colIdx = $board.columns.data.findIndex((c) => c._id === cid);
-		const cardIdx = $board.columns.data[colIdx].cards.data.findIndex(
-			(c) => c._id === e.detail.items[0]._id
-		);
+		// const cardIdx = $board.columns.data[colIdx].cards.data.findIndex(
+		// 	(c) => c._id === e.detail.items[0]._id
+		// );
 		$board.columns.data[colIdx].cards.data = e.detail.items;
 	}
 
 	function handleDndFinalizeCards(cid, e) {
 		console.log('handleDndFinalizeCards');
 		const colIdx = $board.columns.data.findIndex((c) => c._id === cid);
-		const cardIdx = $board.columns.data[colIdx].cards.data.findIndex(
-			(c) => c._id === e.detail.items[0]._id
-		);
+		// const cardIdx = $board.columns.data[colIdx].cards.data.findIndex(
+		// 	(c) => c._id === e.detail.items[0]._id
+		// );
 		$board.columns.data[colIdx].cards.data = e.detail.items;
 	}
 
 	function handleClick(columnIndex, cid) {
-		console.log('dragabble elements are still clickable :)');
 		editableCard = $board.columns.data[columnIndex].cards.data.find((c) => c._id === cid);
 		console.log(editableCard);
 		editableCardColIdx = columnIndex;
+		actionType = 'update';
 		showModal1 = true;
+
+		console.log(showModal1);
+	}
+	function addCard() {
+		editableCard = { title: '', description: '', weight: 1, columnId: $board.columns.data[0]._id };
+		showModal1 = true;
+		actionType = 'save';
 		console.log(showModal1);
 	}
 
@@ -73,31 +80,18 @@
 		console.log($board.columns.data[0].cards.data);
 	}
 
-	async function createCard() {
-		console.log($board.columns.data[0].cards.data);
-		console.log('create card');
-		let card = {
-			title: 'Card ' + i++,
-			description: 'card1',
-			weight: 1,
-			columnId: '293327431558758913'
-		};
+	async function createCard(e) {
 		const res = await fetch('api/card', {
 			method: 'POST',
-			body: JSON.stringify(card)
+			body: JSON.stringify(e.detail)
 		});
 		if (res.ok) {
 			const json = await res.json();
 			$board.columns.data[0].cards.data = [...$board.columns.data[0].cards.data, json];
-			// board.addCard(json);
 		} else {
 			console.log(res.error());
 		}
-		// $board.columns.data[0].cards.data.push(json.data.createCard)
-		// console.log($board.columns.data);
-		// console.log('$board.columns.data[0].cards.data');
-		// console.log($board.columns.data[0].cards.data);
-		// console.log($board.columns.data[0].cards.data);
+		showModal1 = false;
 	}
 
 	async function removeCard(columnIndex, cid) {
@@ -118,10 +112,12 @@
 </script>
 
 {#if showModal1}
-	<CardUpdateDialog
+	<CardDialog
 		{editableCard}
+		{actionType}
 		on:close={() => (showModal1 = false)}
-		on:save={(e) => updateCard(e)}
+		on:save={(e) => createCard(e)}
+		on:update={(e) => updateCard(e)}
 	/>
 {/if}
 <div
@@ -154,7 +150,7 @@
 				{#if columnIndex === 0}
 					<div class="flex justify-end">
 						<button
-							on:click={createCard}
+							on:click={addCard}
 							class="flex items-center mt-1 mx-1 px-4 py-2 font-medium text-sm text-white bg-gray-800 rounded-md hover:bg-gray-700"
 						>
 							<svg
