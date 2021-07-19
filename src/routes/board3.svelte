@@ -8,51 +8,73 @@
 	import Card from '$lib/Card/index.svelte';
 	import CardUpdateDialog from '$lib/card-update-dialog.svelte';
 	import board from '../stores/board';
-	let editableCard ={title: "", description: ""}
+	let editableCard = { title: '', description: '' };
 
-	let i = 1;
+	let editableCardColIdx = -1;
 	let showModal1 = false;
 
-	$: columnItems = $board.columns.data;
 	const flipDurationMs = 200;
 
 	function handleDndConsiderColumns(e) {
-		columnItems = e.detail.items;
+		$board.columns.data = e.detail.items;
 	}
 
 	function handleDndFinalizeColumns(e) {
-		columnItems = e.detail.items;
+		$board.columns.data = e.detail.items;
 	}
 
 	function handleDndConsiderCards(cid, e) {
 		console.log('handleDndConsiderCards');
-		const colIdx = columnItems.findIndex((c) => c._id === cid);
-		const cardIdx = columnItems[colIdx].cards.data.findIndex(
+		const colIdx = $board.columns.data.findIndex((c) => c._id === cid);
+		const cardIdx = $board.columns.data[colIdx].cards.data.findIndex(
 			(c) => c._id === e.detail.items[0]._id
 		);
+		$board.columns.data[colIdx].cards.data = e.detail.items;
 	}
 
 	function handleDndFinalizeCards(cid, e) {
 		console.log('handleDndFinalizeCards');
-		const colIdx = columnItems.findIndex((c) => c._id === cid);
-		const cardIdx = columnItems[colIdx].cards.data.findIndex(
+		const colIdx = $board.columns.data.findIndex((c) => c._id === cid);
+		const cardIdx = $board.columns.data[colIdx].cards.data.findIndex(
 			(c) => c._id === e.detail.items[0]._id
 		);
-		columnItems[colIdx].cards.data = e.detail.items;
+		$board.columns.data[colIdx].cards.data = e.detail.items;
 	}
 
 	function handleClick(columnIndex, cid) {
 		console.log('dragabble elements are still clickable :)');
-		editableCard = columnItems[columnIndex].cards.data.find((c) => c._id === cid);
+		editableCard = $board.columns.data[columnIndex].cards.data.find((c) => c._id === cid);
 		console.log(editableCard);
-
-		showModal1 = !showModal1;
+		editableCardColIdx = columnIndex;
+		showModal1 = true;
 		console.log(showModal1);
+	}
 
+	async function updateCard(e) {
+		console.log('update card');
+		console.log(e.detail);
+		console.log('$board.columns.data[0].cards.data');
+		console.log($board.columns.data[0].cards.data);
+		const res = await fetch('api/card', {
+			method: 'PUT',
+			body: JSON.stringify(e.detail)
+		});
+		console.log(res);
+		if (res.ok) {
+			const json = await res.json();
+			board.updateCard(editableCardColIdx, json);
+		} else {
+			console.log(res.error());
+		}
+		showModal1 = false;
+		// $board.columns.data[0].cards.data.push(json.data.createCard)
+		// $board.columns.data[0].cards.data = [...$board.columns.data[0].cards.data, card];
+		console.log('$board.columns.data[0].cards.data');
+		console.log($board.columns.data[0].cards.data);
 	}
 
 	async function createCard() {
-		console.log(columnItems[0].cards.data);
+		console.log($board.columns.data[0].cards.data);
 		console.log('create card');
 		let card = {
 			title: 'Card ' + i++,
@@ -66,16 +88,16 @@
 		});
 		if (res.ok) {
 			const json = await res.json();
-			board.addCard(json);
+			$board.columns.data[0].cards.data = [...$board.columns.data[0].cards.data, json];
+			// board.addCard(json);
 		} else {
 			console.log(res.error());
 		}
-		// columnItems[0].cards.data.push(json.data.createCard)
-		console.log(columnItems);
-		columnItems[0].cards.data = [...columnItems[0].cards.data, card];
-		console.log('$board.columns.data[0].cards.data');
-		console.log($board.columns.data[0].cards.data);
-		console.log(columnItems[0].cards.data);
+		// $board.columns.data[0].cards.data.push(json.data.createCard)
+		// console.log($board.columns.data);
+		// console.log('$board.columns.data[0].cards.data');
+		// console.log($board.columns.data[0].cards.data);
+		// console.log($board.columns.data[0].cards.data);
 	}
 
 	async function removeCard(columnIndex, cid) {
@@ -85,7 +107,8 @@
 		});
 		if (res.ok) {
 			const json = await res.json();
-			const cardIndex = columnItems[columnIndex].cards.data.findIndex((c) => c._id === cid);
+			const cardIndex = $board.columns.data[columnIndex].cards.data.findIndex((c) => c._id === cid);
+			// $board.columns.data[columnIndex].cards.data.splice(cardIndex, 1);
 			board.removeCard(columnIndex, cardIndex);
 		} else {
 			console.log(res.error());
@@ -94,14 +117,20 @@
 	}
 </script>
 
-<CardUpdateDialog {showModal1} {editableCard}/>
+{#if showModal1}
+	<CardUpdateDialog
+		{editableCard}
+		on:close={() => (showModal1 = false)}
+		on:save={(e) => updateCard(e)}
+	/>
+{/if}
 <div
 	class="flex justify-center p-1 board my-1"
-	use:dndzone={{ items: columnItems, flipDurationMs, type: 'columns' }}
+	use:dndzone={{ items: $board.columns.data, flipDurationMs, type: 'columns' }}
 	on:consider={handleDndConsiderColumns}
 	on:finalize={handleDndFinalizeColumns}
 >
-	{#each columnItems as column, columnIndex}
+	{#each $board.columns.data as column, columnIndex}
 		<div class="bg-gray-100 rounded-lg p-1 mx-1 rounded column">
 			<p class="text-gray-700 font-semibold font-sans tracking-wide p-1 text-sm">
 				{column.title}
@@ -114,8 +143,12 @@
 				on:finalize={(e) => handleDndFinalizeCards(column._id, e)}
 			>
 				{#each column.cards.data as card (card._id)}
-					<div class="card" animate:flip={{ duration: flipDurationMs }} on:click={() => handleClick(columnIndex,card._id)}>
-						<Card {card} on:remove-card={() => removeCard(columnIndex, card._id)} />
+					<div class="card" animate:flip={{ duration: flipDurationMs }}>
+						<Card
+							{card}
+							on:remove={() => removeCard(columnIndex, card._id)}
+							on:edit={() => handleClick(columnIndex, card._id)}
+						/>
 					</div>
 				{/each}
 				{#if columnIndex === 0}

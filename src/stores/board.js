@@ -4,6 +4,13 @@ const BOARD = {};
 
 const { subscribe, set, update } = writable(BOARD);
 
+const updateCard = (colIdx, card) =>
+	update((board) => {
+		const cardIdx = board.columns.data[colIdx].cards.data.findIndex((c) => c._id === card._id);
+		board.columns.data[colIdx].cards.data[cardIdx] = card;
+		return board;
+	});
+
 const addCard = (card) =>
 	update((board) => {
 		board.columns.data[0].cards.data.push(card);
@@ -29,5 +36,6 @@ export default {
 	set,
 	addCard,
 	removeCard,
+	updateCard,
 	reset
 };

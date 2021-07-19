@@ -34,6 +34,8 @@ export async function post(req) {
 }
 
 export async function put(req) {
+	console.log("req")
+	console.log(req)
 	let response;
 	await fetch(FAUNA_API.toString(), {
 		method: 'POST',
@@ -48,6 +50,7 @@ export async function put(req) {
 	})
 		.then((res) => res.json())
 		.then((result) => {
+			console.log(result);
 			response = result.data.updateCard;
 		})
 		.catch((e) => {

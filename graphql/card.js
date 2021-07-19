@@ -52,13 +52,13 @@ export const DELETE_CARD_MUTATION = `
 //
 export const UPDATE_CARD_MUTATION = `
   mutation updateCard(
-    $id: ID!
+    $_id: ID!
     $title: String!
     $description: String!
     $weight: Int!
   ) {
     updateCard(
-      id: $id
+      id: $_id
       data: { title: $title, description: $description, weight: $weight }
     ) {
       _id

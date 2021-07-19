@@ -3,25 +3,24 @@
 
 	const dispatch = createEventDispatcher();
 	export let card;
-	function removeCard() {
-		dispatch('remove-card', card._id);
-	}
 </script>
 
 <div class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white my-2">
-	<div class="flex justify-between">
-		<p class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{card.title}</p>
+	<div class="flex justify-between" on:click={() => dispatch('edit')}>
+		<p class="text-gray-700 font-semibold font-sans tracking-wide text-sm cursor-pointer">
+			{card.title}
+		</p>
 
 		<img
 			class="w-6 h-6 rounded-full ml-3"
 			src="https://pickaface.net/gallery/avatar/unr_sample_161118_2054_ynlrg.png"
 			alt="Avatar"
-		>
+		/>
 	</div>
 	<div class="flex mt-4 justify-between items-center">
 		<button
-			class="h-8 m-2 text-sm text-red-700 transition-colors rounded-lg hover:bg-red-100"
-			on:click={removeCard}
+			class="h-8 m-2 text-sm text-red-700 transition-colors rounded-lg hover:bg-red-100 hover:"
+			on:click={() => dispatch('remove')}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
