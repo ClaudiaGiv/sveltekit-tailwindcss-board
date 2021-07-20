@@ -11,6 +11,12 @@ const updateCard = (colIdx, card) =>
 		return board;
 	});
 
+const updateCardWeights = (fromColumnIndex, fromCardIndex, toColumnIndex, toCardIndex) =>
+	update((board) => {
+
+		return board;
+	});
+
 const addCard = (card) =>
 	update((board) => {
 		board.columns.data[0].cards.data.push(card);
@@ -36,6 +42,7 @@ export default {
 	set,
 	addCard,
 	removeCard,
+	updateCardWeights,
 	updateCard,
 	reset
 };

@@ -80,3 +80,5 @@ export async function del(req) {
 		body: response
 	};
 }
+
+//TODO: add a put function (in a separate file maybe) for updating cards weight
