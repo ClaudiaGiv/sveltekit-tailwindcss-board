@@ -4,12 +4,16 @@
 	import { dndzone } from 'svelte-dnd-action';
 	import { overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
 	import combineQuery from 'graphql-combine-query';
+	import { print } from 'graphql/language/printer';
 
 	overrideItemIdKeyNameBeforeInitialisingDndZones('_id');
 	import Card from '$lib/Card/index.svelte';
 	import CardDialog from '$lib/card-dialog.svelte';
 	import board from '../stores/board';
-	import { UPDATE_CARD_WEIGHT_AND_COLUMN_MUTATION, UPDATE_CARD_WEIGHT_MUTATION } from '../../graphql/card';
+	import {
+		UPDATE_CARD_WEIGHT_AND_COLUMN_MUTATION,
+		UPDATE_CARD_WEIGHT_MUTATION
+	} from '../../graphql/card';
 
 	let editableCard = { title: '', description: '', weight: 1 };
 	let actionType = 'save';
@@ -17,7 +21,6 @@
 	let showModal1 = false;
 	const flipDurationMs = 200;
 	let cardsForUpdateByWeight = [];
-	let combinedQuery = [];
 	let fromColIdx = -1;
 	let fromCardIdx = -1;
 	let toColIdx = -1;
@@ -67,11 +70,15 @@
 		if (finalized === 0 && fromColIdx === colIdx && fromCardIdx !== cardIdx) {
 			//same column
 			console.log('same column');
-			const minCardIdx = fromCardIdx < toCardIdx ? fromCardIdx : toCardIdx;
+			const minCardIdx = fromCardIdx < cardIdx ? fromCardIdx : cardIdx;
 			updateCardsWeight($board.columns.data[colIdx].cards.data, minCardIdx);
-			combinedQuery = combineQuery("UpdateCardsWeight")
-				.addN(UPDATE_CARD_WEIGHT_MUTATION, cardsForUpdateByWeight)
-			updateCards(combinedQuery)
+
+			const { document, variables } = combineQuery('UpdateCardsWeight').addN(
+				UPDATE_CARD_WEIGHT_MUTATION,
+				cardsForUpdateByWeight
+			);
+
+			updateCards({ document, variables });
 			fromColIdx = -1;
 			fromCardIdx = -1;
 			return;
@@ -89,11 +96,11 @@
 				weight: $board.columns.data[colIdx].cards.data[cardIdx].weight,
 				columnId: colIdx
 			};
-			combinedQuery = combineQuery("UpdateCardsWeight")
+
+			const { document, variables } = combineQuery('UpdateCardsWeight')
 				.addN(UPDATE_CARD_WEIGHT_MUTATION, cardsForUpdateByWeight)
 				.add(UPDATE_CARD_WEIGHT_AND_COLUMN_MUTATION, cardForupdateByColumn);
-			updateCards(combinedQuery)
-
+			updateCards({ document, variables });
 		}
 		if (finalized === 2) {
 			finalized = 0;
@@ -112,29 +119,35 @@
 		console.log('toCardIdx');
 		console.log(toCardIdx);
 	}
-	async function updateCards(combinedQuery){
+	async function updateCards({ document, variables }) {
 		console.log('update cardsssss');
 
+		const mutationString = print(document);
+		console.log('mutationString');
+		console.log(mutationString);
 		const res = await fetch('api/cards', {
 			method: 'PUT',
-			body: JSON.stringify(combinedQuery)
+			body: JSON.stringify({
+				query: mutationString,
+				variables
+			})
 		});
 		console.log(res);
 		if (res.ok) {
 			const json = await res.json();
-			board.updateCard(editableCardColIdx, json);
+			console.log(json);
+			// board.updateCard(editableCardColIdx, json);
 		} else {
 			console.log(res.error());
 		}
 		showModal1 = false;
 	}
 
-
 	function updateCardsWeight(cards, index) {
 		console.log('-------------------------');
-		console.log($board.columns.data[1].cards.data);
 		console.log('cards');
 		console.log(cards);
+		console.log(index);
 		if (cards === [] || cards === undefined) {
 			return;
 		}
