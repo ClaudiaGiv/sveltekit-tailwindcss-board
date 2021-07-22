@@ -1,29 +1,31 @@
 <script>
-	// This is done in a single file for clarity. A more factored version here: https://svelte.dev/repl/288f827275db4054b23c437a572234f6?version=3.38.2
 	import { flip } from 'svelte/animate';
-	import { dndzone } from 'svelte-dnd-action';
-	import { overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
+	import { dndzone, overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
 	import combineQuery from 'graphql-combine-query';
 	import { print } from 'graphql/language/printer';
-
-	overrideItemIdKeyNameBeforeInitialisingDndZones('_id');
 	import Card from '$lib/Card/index.svelte';
 	import CardDialog from '$lib/card-dialog.svelte';
 	import board from '../stores/board';
+
+	console.log("board")
+	console.log($board.columns.data[0].cards.data)
+	console.log($board.columns.data[1].cards.data)
+	console.log($board.columns.data[2].cards.data)
 	import {
 		UPDATE_CARD_WEIGHT_AND_COLUMN_MUTATION,
 		UPDATE_CARD_WEIGHT_MUTATION
 	} from '../../graphql/card';
 
-	let editableCard = { title: '', description: '', weight: 1 };
+	overrideItemIdKeyNameBeforeInitialisingDndZones('_id');
+
+	const flipDurationMs = 200;
+
+	let editableCard;
 	let actionType = 'save';
 	let editableCardColIdx = -1;
 	let showModal1 = false;
-	const flipDurationMs = 200;
-	let cardsForUpdateByWeight = [];
 	let fromColIdx = -1;
 	let fromCardIdx = -1;
-	let toColIdx = -1;
 	let toCardIdx = -1;
 	let finalized = 0;
 
@@ -36,8 +38,6 @@
 	}
 
 	function handleDndConsiderCards(cid, e) {
-		console.log('+++++++handleDndConsiderCards+++++++++');
-		// console.log(e.detail);
 		const colIdx = $board.columns.data.findIndex((c) => c._id === cid);
 		const cardIdx = $board.columns.data[colIdx].cards.data.findIndex(
 			(c) => c._id === e.detail.info.id
@@ -47,32 +47,22 @@
 		fromColIdx = fromColIdx === -1 ? colIdx : fromColIdx;
 		fromCardIdx = fromCardIdx === -1 ? cardIdx : fromCardIdx;
 
-		console.log(fromColIdx);
-		console.log(fromCardIdx);
 	}
 
 	function handleDndFinalizeCards(cid, e) {
-		console.log('----------handleDndFinalizeCards---------------');
-		console.log($board.columns.data[1].cards.data);
-		// console.log('e.detail');
-		// console.log(e.detail.info);
 		const colIdx = $board.columns.data.findIndex((c) => c._id === cid);
 		$board.columns.data[colIdx].cards.data = e.detail.items;
 		const cardIdx = $board.columns.data[colIdx].cards.data.findIndex(
 			(c) => c._id === e.detail.info.id
 		);
-		console.log('finalized');
-		console.log(finalized);
-		console.log('colIdx');
-		console.log(colIdx);
-		console.log('cardIdx');
-		console.log(cardIdx);
 		if (finalized === 0 && fromColIdx === colIdx && fromCardIdx !== cardIdx) {
 			//same column
 			console.log('same column');
 			const minCardIdx = fromCardIdx < cardIdx ? fromCardIdx : cardIdx;
-			updateCardsWeight($board.columns.data[colIdx].cards.data, minCardIdx);
-
+			const cardsForUpdateByWeight = updateCardsWeight(
+				$board.columns.data[colIdx].cards.data,
+				minCardIdx
+			);
 			const { document, variables } = combineQuery('UpdateCardsWeight').addN(
 				UPDATE_CARD_WEIGHT_MUTATION,
 				cardsForUpdateByWeight
@@ -85,16 +75,19 @@
 		}
 		if (finalized === 0 && fromColIdx !== colIdx) {
 			//different columns
-			toColIdx = colIdx;
-			toCardIdx = cardIdx;
 			console.log('different columns');
 			finalized = 1;
-			updateCardsWeight($board.columns.data[fromColIdx].cards.data, fromCardIdx);
-			updateCardsWeight($board.columns.data[toColIdx].cards.data, toCardIdx);
+			let cardsForUpdateByWeight = updateCardsWeight(
+				$board.columns.data[fromColIdx].cards.data,
+				fromCardIdx
+			);
+			cardsForUpdateByWeight.push(
+				...updateCardsWeight($board.columns.data[colIdx].cards.data, cardIdx)
+			);
 			let cardForupdateByColumn = {
 				id: $board.columns.data[colIdx].cards.data[cardIdx]._id,
 				weight: $board.columns.data[colIdx].cards.data[cardIdx].weight,
-				columnId: colIdx
+				columnId:  $board.columns.data[colIdx]._id
 			};
 
 			const { document, variables } = combineQuery('UpdateCardsWeight')
@@ -110,44 +103,10 @@
 		if (finalized === 1) {
 			finalized = 2;
 		}
-		console.log('fromColIdx');
-		console.log(fromColIdx);
-		console.log('fromCardIdx');
-		console.log(fromCardIdx);
-		console.log('toColIdx');
-		console.log(toColIdx);
-		console.log('toCardIdx');
-		console.log(toCardIdx);
-	}
-	async function updateCards({ document, variables }) {
-		console.log('update cardsssss');
-
-		const mutationString = print(document);
-		console.log('mutationString');
-		console.log(mutationString);
-		const res = await fetch('api/cards', {
-			method: 'PUT',
-			body: JSON.stringify({
-				query: mutationString,
-				variables
-			})
-		});
-		console.log(res);
-		if (res.ok) {
-			const json = await res.json();
-			console.log(json);
-			// board.updateCard(editableCardColIdx, json);
-		} else {
-			console.log(res.error());
-		}
-		showModal1 = false;
 	}
 
 	function updateCardsWeight(cards, index) {
-		console.log('-------------------------');
-		console.log('cards');
-		console.log(cards);
-		console.log(index);
+		let cardsForUpdateByWeight = [];
 		if (cards === [] || cards === undefined) {
 			return;
 		}
@@ -161,34 +120,45 @@
 				weight: cards[i].weight
 			});
 		}
-		console.log('++++++++++++++++++++++++++++++++');
-		console.log($board.columns.data[1].cards.data);
-		console.log('cards');
-		console.log(cards);
+		return cardsForUpdateByWeight;
 	}
 
-	function handleClick(columnIndex, cid) {
+	function editCard(columnIndex, cid) {
 		editableCard = $board.columns.data[columnIndex].cards.data.find((c) => c._id === cid);
-		console.log(editableCard);
 		editableCardColIdx = columnIndex;
 		actionType = 'update';
 		showModal1 = true;
-
-		console.log(showModal1);
 	}
 
 	function addCard() {
-		editableCard = { title: '', description: '', weight: 1, columnId: $board.columns.data[0]._id };
-		showModal1 = true;
+		const editableCardWeight = $board.columns.data[0].cards.data.length
+		const editableCardColumnId = $board.columns.data[0]._id
+		editableCard = { title: '', description: '', weight: editableCardWeight, columnId: editableCardColumnId};
 		actionType = 'save';
-		console.log(showModal1);
+		showModal1 = true;
+	}
+
+	// Async Functions - Endpoints Requests
+	async function updateCards({ document, variables }) {
+		console.log('update cards');
+		const mutationString = print(document);
+		const res = await fetch('api/cards', {
+			method: 'PUT',
+			body: JSON.stringify({
+				query: mutationString,
+				variables
+			})
+		});
+		console.log(res);
+		if (res.ok) {
+			const json = await res.json();
+			console.log(json);
+		} else {
+			console.log(res.error());
+		}
 	}
 
 	async function updateCard(e) {
-		console.log('update card');
-		console.log(e.detail);
-		console.log('$board.columns.data[0].cards.data');
-		console.log($board.columns.data[0].cards.data);
 		const res = await fetch('api/card', {
 			method: 'PUT',
 			body: JSON.stringify(e.detail)
@@ -201,10 +171,6 @@
 			console.log(res.error());
 		}
 		showModal1 = false;
-		// $board.columns.data[0].cards.data.push(json.data.createCard)
-		// $board.columns.data[0].cards.data = [...$board.columns.data[0].cards.data, card];
-		console.log('$board.columns.data[0].cards.data');
-		console.log($board.columns.data[0].cards.data);
 	}
 
 	async function createCard(e) {
@@ -229,13 +195,12 @@
 		if (res.ok) {
 			const json = await res.json();
 			const cardIndex = $board.columns.data[columnIndex].cards.data.findIndex((c) => c._id === cid);
-			// $board.columns.data[columnIndex].cards.data.splice(cardIndex, 1);
 			board.removeCard(columnIndex, cardIndex);
 		} else {
 			console.log(res.error());
 		}
-		console.log($board.columns.data[0].cards.data);
 	}
+
 </script>
 
 {#if showModal1}
@@ -270,7 +235,7 @@
 						<Card
 							{card}
 							on:remove={() => removeCard(columnIndex, card._id)}
-							on:edit={() => handleClick(columnIndex, card._id)}
+							on:edit={() => editCard(columnIndex, card._id)}
 						/>
 					</div>
 				{/each}

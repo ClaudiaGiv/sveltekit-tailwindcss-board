@@ -8,9 +8,8 @@
 
 		if (res.ok) {
 			const json = await res.json();
-			const board1 = await json.data.boardByUserId.data[0]
+			const board1 = await json
 			console.log(board1)
-			console.log(JSON.stringify(board1))
 			board.set(board1);
 			return {};
 		}
