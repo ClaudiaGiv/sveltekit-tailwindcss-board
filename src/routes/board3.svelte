@@ -7,10 +7,11 @@
 	import CardDialog from '$lib/card-dialog.svelte';
 	import board from '../stores/board';
 
-	console.log("board")
-	console.log($board.columns.data[0].cards.data)
-	console.log($board.columns.data[1].cards.data)
-	console.log($board.columns.data[2].cards.data)
+	console.log('board');
+	console.log($board.columns.data);
+	console.log($board.columns.data[0].cards.data);
+	console.log($board.columns.data[1].cards.data);
+	console.log($board.columns.data[2].cards.data);
 	import {
 		UPDATE_CARD_WEIGHT_AND_COLUMN_MUTATION,
 		UPDATE_CARD_WEIGHT_MUTATION
@@ -21,6 +22,7 @@
 	const flipDurationMs = 200;
 
 	let editableCard;
+	let editableColumn;
 	let actionType = 'save';
 	let editableCardColIdx = -1;
 	let showModal1 = false;
@@ -28,6 +30,8 @@
 	let fromCardIdx = -1;
 	let toCardIdx = -1;
 	let finalized = 0;
+
+	//--- DND Functions ---
 
 	function handleDndConsiderColumns(e) {
 		$board.columns.data = e.detail.items;
@@ -46,7 +50,6 @@
 
 		fromColIdx = fromColIdx === -1 ? colIdx : fromColIdx;
 		fromCardIdx = fromCardIdx === -1 ? cardIdx : fromCardIdx;
-
 	}
 
 	function handleDndFinalizeCards(cid, e) {
@@ -87,7 +90,7 @@
 			let cardForupdateByColumn = {
 				id: $board.columns.data[colIdx].cards.data[cardIdx]._id,
 				weight: $board.columns.data[colIdx].cards.data[cardIdx].weight,
-				columnId:  $board.columns.data[colIdx]._id
+				columnId: $board.columns.data[colIdx]._id
 			};
 
 			const { document, variables } = combineQuery('UpdateCardsWeight')
@@ -104,6 +107,10 @@
 			finalized = 2;
 		}
 	}
+
+	//--- DND Functions ---
+
+	//--- Card updates Functions ---
 
 	function updateCardsWeight(cards, index) {
 		let cardsForUpdateByWeight = [];
@@ -123,22 +130,54 @@
 		return cardsForUpdateByWeight;
 	}
 
-	function editCard(columnIndex, cid) {
-		editableCard = $board.columns.data[columnIndex].cards.data.find((c) => c._id === cid);
-		editableCardColIdx = columnIndex;
+	function editCard(colId, cardId) {
+		const colIdx = $board.columns.data.findIndex(c => c._id === colId);
+		editableCard = $board.columns.data[colIdx].cards.data.find((c) => c._id === cardId);
+		editableCardColIdx = colIdx;
 		actionType = 'update';
 		showModal1 = true;
 	}
 
 	function addCard() {
-		const editableCardWeight = $board.columns.data[0].cards.data.length
-		const editableCardColumnId = $board.columns.data[0]._id
-		editableCard = { title: '', description: '', weight: editableCardWeight, columnId: editableCardColumnId};
+		const editableCardWeight = $board.columns.data[0].cards.data.length;
+		const editableCardColumnId = $board.columns.data[0]._id;
+		editableCard = {
+			title: '',
+			description: '',
+			weight: editableCardWeight,
+			columnId: editableCardColumnId
+		};
 		actionType = 'save';
 		showModal1 = true;
 	}
 
-	// Async Functions - Endpoints Requests
+	//--- Card updates Functions ---
+
+	//--- Column updates Functions ---
+
+	function addColumn() {
+		const newColumn = {
+			title: '',
+			description: '',
+			weight: $board.columns.data.length
+		};
+	}
+
+	function editColumn(colId) {
+		// editableColumn = $board.columns.data[columnIndex].cards.data.find((c) => c._id === cid);
+		// editableCardColIdx = columnIndex;
+		// actionType = 'update';
+		// showModal1 = true;
+	}
+
+	function isFirstColumn(colId) {
+		return $board.columns.data.findIndex(c => c._id === colId) === 0;
+	}
+
+	//--- Column updates Functions ---
+
+	//--- Async Functions - Endpoints Requests ---
+
 	async function updateCards({ document, variables }) {
 		console.log('update cards');
 		const mutationString = print(document);
@@ -187,20 +226,22 @@
 		showModal1 = false;
 	}
 
-	async function removeCard(columnIndex, cid) {
+	async function removeCard(colId, cardId) {
 		const res = await fetch('api/card', {
 			method: 'DELETE',
-			body: JSON.stringify({ id: cid })
+			body: JSON.stringify({ id: cardId })
 		});
 		if (res.ok) {
 			const json = await res.json();
-			const cardIndex = $board.columns.data[columnIndex].cards.data.findIndex((c) => c._id === cid);
-			board.removeCard(columnIndex, cardIndex);
+			const colIdx = $board.columns.data.findIndex(c => c._id === colId);
+			const cardIdx = $board.columns.data[colIdx].cards.data.findIndex((c) => c._id === cardId);
+			board.removeCard(colIdx, cardIdx);
 		} else {
 			console.log(res.error());
 		}
 	}
 
+	//--- Async Functions - Endpoints Requests ---
 </script>
 
 {#if showModal1}
@@ -218,8 +259,8 @@
 	on:consider={handleDndConsiderColumns}
 	on:finalize={handleDndFinalizeColumns}
 >
-	{#each $board.columns.data as column, columnIndex}
-		<div class="bg-gray-100 rounded-lg p-1 mx-1 rounded column">
+	{#each $board.columns.data as column (column._id)}
+		<div class="bg-gray-100 rounded-lg p-1 mx-1 rounded column" animate:flip={{ duration: flipDurationMs }}>
 			<p class="text-gray-700 font-semibold font-sans tracking-wide p-1 text-sm">
 				{column.title}
 			</p>
@@ -234,12 +275,12 @@
 					<div class="card" animate:flip={{ duration: flipDurationMs }}>
 						<Card
 							{card}
-							on:remove={() => removeCard(columnIndex, card._id)}
-							on:edit={() => editCard(columnIndex, card._id)}
+							on:remove={() => removeCard(column._id, card._id)}
+							on:edit={() => editCard(column._id, card._id)}
 						/>
 					</div>
 				{/each}
-				{#if columnIndex === 0}
+				{#if isFirstColumn(column._id)}
 					<div class="flex justify-end">
 						<button
 							on:click={addCard}
@@ -266,6 +307,25 @@
 			</div>
 		</div>
 	{/each}
+	<div class="rounded column">
+		<div class="flex justify-start">
+			<button
+				on:click={addColumn}
+				class="flex items-center mt-1 mx-1 px-4 py-2 font-medium text-sm text-white bg-gray-800 rounded-md hover:bg-gray-700"
+			>
+				<svg class="h-5 w-5" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M12 4v16m8-8H4"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+				</svg>
+				<span>Add column</span>
+			</button>
+		</div>
+	</div>
 </div>
 
 <style>
