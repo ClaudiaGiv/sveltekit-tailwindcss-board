@@ -2,7 +2,7 @@
 	import { flip } from 'svelte/animate';
 	import { dndzone, overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
 	import combineQuery from 'graphql-combine-query';
-	import { print } from 'graphql/language/printer';
+	import { print } from 'graphql/language/printer.js';
 	import Card from '$lib/Card/index.svelte';
 	import CardDialog from '$lib/card-dialog.svelte';
 	import board from '../stores/board';
