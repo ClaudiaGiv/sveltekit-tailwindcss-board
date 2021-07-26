@@ -11,15 +11,10 @@ const updateCard = (colIdx, card) =>
 		return board;
 	});
 
-const updateCardWeights = (fromColumnIndex, fromCardIndex, toColumnIndex, toCardIndex) =>
+const updateColumn = (column) =>
 	update((board) => {
-
-		return board;
-	});
-
-const addCard = (card) =>
-	update((board) => {
-		board.columns.data[0].cards.data.push(card);
+		const colIdx = board.columns.data.findIndex((c) => c._id === column._id);
+		board.columns.data[colIdx] = column;
 		return board;
 	});
 
@@ -40,9 +35,8 @@ const reset = () => {
 export default {
 	subscribe,
 	set,
-	addCard,
 	removeCard,
-	updateCardWeights,
 	updateCard,
+	updateColumn,
 	reset
 };

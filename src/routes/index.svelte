@@ -3,8 +3,11 @@
 
 	console.log('before load');
 
-	function sortBoardElements(board){
-		board.columns.data.forEach(el =>
+	function sortBoardElements(board) {
+		board.columns.data.sort((x, y) => {
+			return x.weight - y.weight;
+		});
+		board.columns.data.forEach((el) =>
 			el.cards.data.sort((x, y) => {
 				return x.weight - y.weight;
 			})
@@ -18,8 +21,8 @@
 
 		if (res.ok) {
 			const json = await res.json();
-			const board1 = await json
-			console.log(board1)
+			const board1 = await json;
+			console.log(board1);
 			board.set(sortBoardElements(board1));
 			return {};
 		}
@@ -29,7 +32,6 @@
 		};
 	}
 </script>
-
 
 <section>
 	<h1>Welcome to SvelteKit</h1>

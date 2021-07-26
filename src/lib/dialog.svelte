@@ -2,14 +2,15 @@
 	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
-	export let editableCard;
+	export let object;
+	console.log(object);
 	export let actionType;
 
 	function close() {
 		dispatch('close');
 	}
 	function save() {
-		dispatch(actionType, editableCard);
+		dispatch(actionType + '-' + object.type, object);
 	}
 </script>
 
@@ -51,16 +52,16 @@
 			<main class="p-2 text-center">
 				<div class="mb-3 pt-0">
 					<input
-						bind:value={editableCard.title}
+						bind:value={object.title}
 						type="text"
-						placeholder="Placeholder"
+						placeholder="Title"
 						class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full"
 					/>
 				</div>
 				<div class="mb-3 pt-0">
 					<textarea
-						bind:value={editableCard.description}
-						placeholder="Placeholder"
+						bind:value={object.description}
+						placeholder="Description"
 						class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full"
 					/>
 				</div>

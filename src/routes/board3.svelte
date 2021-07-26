@@ -4,7 +4,7 @@
 	import combineQuery from 'graphql-combine-query';
 	import { print } from 'graphql/language/printer.js';
 	import Card from '$lib/Card/index.svelte';
-	import CardDialog from '$lib/card-dialog.svelte';
+	import Dialog from '$lib/dialog.svelte';
 	import board from '../stores/board';
 
 	console.log('board');
@@ -21,14 +21,12 @@
 
 	const flipDurationMs = 200;
 
-	let editableCard;
-	let editableColumn;
+	let object;
 	let actionType = 'save';
 	let editableCardColIdx = -1;
 	let showModal1 = false;
 	let fromColIdx = -1;
 	let fromCardIdx = -1;
-	let toCardIdx = -1;
 	let finalized = 0;
 
 	//--- DND Functions ---
@@ -132,20 +130,21 @@
 
 	function editCard(colId, cardId) {
 		const colIdx = $board.columns.data.findIndex(c => c._id === colId);
-		editableCard = $board.columns.data[colIdx].cards.data.find((c) => c._id === cardId);
+		object = {...$board.columns.data[colIdx].cards.data.find((c) => c._id === cardId), type: "card"};
 		editableCardColIdx = colIdx;
 		actionType = 'update';
 		showModal1 = true;
 	}
 
 	function addCard() {
-		const editableCardWeight = $board.columns.data[0].cards.data.length;
-		const editableCardColumnId = $board.columns.data[0]._id;
-		editableCard = {
+		const cardWeight = $board.columns.data[0].cards.data.length;
+		const columnId = $board.columns.data[0]._id;
+		object = {
+			type: 'card',
 			title: '',
 			description: '',
-			weight: editableCardWeight,
-			columnId: editableCardColumnId
+			weight: cardWeight,
+			columnId: columnId
 		};
 		actionType = 'save';
 		showModal1 = true;
@@ -156,18 +155,23 @@
 	//--- Column updates Functions ---
 
 	function addColumn() {
-		const newColumn = {
+		const columnWeight = $board.columns.data.length;
+		const boardId = $board._id
+		object = {
+			type: 'column',
 			title: '',
 			description: '',
-			weight: $board.columns.data.length
+			weight: columnWeight,
+			boardId: boardId
 		};
+		actionType = 'save';
+		showModal1 = true;
 	}
 
 	function editColumn(colId) {
-		// editableColumn = $board.columns.data[columnIndex].cards.data.find((c) => c._id === cid);
-		// editableCardColIdx = columnIndex;
-		// actionType = 'update';
-		// showModal1 = true;
+		object = {...$board.columns.data.find((c) => c._id === colId), type: "column"};
+		actionType = 'update';
+		showModal1 = true;
 	}
 
 	function isFirstColumn(colId) {
@@ -241,16 +245,47 @@
 		}
 	}
 
+	async function updateColumn(e) {
+		const res = await fetch('api/column', {
+			method: 'PUT',
+			body: JSON.stringify(e.detail)
+		});
+		console.log(res);
+		if (res.ok) {
+			const json = await res.json();
+			board.updateColumn(json);
+		} else {
+			console.log(res.error());
+		}
+		showModal1 = false;
+	}
+
+	async function createColumn(e) {
+		const res = await fetch('api/column', {
+			method: 'POST',
+			body: JSON.stringify(e.detail)
+		});
+		if (res.ok) {
+			const json = await res.json();
+			$board.columns.data = [...$board.columns.data, json];
+		} else {
+			console.log(res.error());
+		}
+		showModal1 = false;
+	}
+
 	//--- Async Functions - Endpoints Requests ---
 </script>
 
 {#if showModal1}
-	<CardDialog
-		{editableCard}
+	<Dialog
+		{object}
 		{actionType}
 		on:close={() => (showModal1 = false)}
-		on:save={(e) => createCard(e)}
-		on:update={(e) => updateCard(e)}
+		on:save-card={(e) => createCard(e)}
+		on:update-card={(e) => updateCard(e)}
+		on:save-column={(e) => createColumn(e)}
+		on:update-column={(e) => updateColumn(e)}
 	/>
 {/if}
 <div
@@ -261,7 +296,7 @@
 >
 	{#each $board.columns.data as column (column._id)}
 		<div class="bg-gray-100 rounded-lg p-1 mx-1 rounded column" animate:flip={{ duration: flipDurationMs }}>
-			<p class="text-gray-700 font-semibold font-sans tracking-wide p-1 text-sm">
+			<p class="text-gray-700 font-semibold font-sans tracking-wide p-1 text-sm" on:click={() => editColumn(column._id)}>
 				{column.title}
 			</p>
 			<!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
