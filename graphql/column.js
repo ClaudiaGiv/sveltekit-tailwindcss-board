@@ -68,11 +68,9 @@ export const UPDATE_COLUMN_WEIGHT_MUTATION = gql`
 `;
 
 export const DELETE_COLUMN_MUTATION = `
-  mutation deleteColumn($ID: ID!) {
-    deleteColumn(id: $ID) {
+  mutation deleteColumn($id: ID!) {
+    deleteColumn(id: $id) {
       _id
-      title
-      description
     }
   }
 `;

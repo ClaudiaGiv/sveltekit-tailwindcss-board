@@ -23,11 +23,14 @@ const updateColumn = (column) =>
 
 const removeCard = (columnIndex, cardIndex) =>
 	update((board) => {
-		console.log('remove card');
-		console.log(cardIndex);
-		console.log(board.columns.data[columnIndex].cards.data);
 		board.columns.data[columnIndex].cards.data.splice(cardIndex, 1);
 		console.log(board.columns.data[columnIndex].cards.data);
+		return board;
+	});
+
+const removeColumn = (columnIndex) =>
+	update((board) => {
+		board.columns.data.splice(columnIndex, 1);
 		return board;
 	});
 
@@ -39,6 +42,7 @@ export default {
 	subscribe,
 	set,
 	removeCard,
+	removeColumn,
 	updateCard,
 	updateColumn,
 	reset
