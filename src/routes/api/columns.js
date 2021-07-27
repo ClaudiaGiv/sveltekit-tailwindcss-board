@@ -1,4 +1,4 @@
-import { FAUNA_API, FAUNA_KEY } from './card';
+import { FAUNA_API, FAUNA_KEY } from './board1';
 
 export async function put(req) {
 	let response;

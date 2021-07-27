@@ -1,23 +1,32 @@
+import gql from 'graphql-tag'
 
 export const CREATE_COLUMN_MUTATION = `
   mutation createColumn(
     $title: String!
     $description: String!
     $weight: Int!
-    $boarId: ID!
+    $boardId: ID!
   ) {
     createColumn(
       data: {
         title: $title
         description: $description
         weight: $weight
-        board: { connect: $boarId }
+        board: { connect: $boardId }
+        cards: {
+            create: []
+      	}
       }
     ) {
       _id
       title
       description
       weight
+      cards {
+      	data {
+      		_id
+      	}
+      }
     }
   }
 `;
@@ -37,11 +46,19 @@ export const UPDATE_COLUMN_MUTATION = `
       title
       description
       weight
+      cards {
+      	data {
+      		_id
+      		title
+      		description
+      		weight
+      	}
+      }
     }
   }
 `;
 
-export const UPDATE_COLUMN_WEIGHT_MUTATION = `
+export const UPDATE_COLUMN_WEIGHT_MUTATION = gql`
   mutation updateColumn($id: ID!, $weight: Int!) {
     updateColumn(id: $id, data: { weight: $weight }) {
       _id

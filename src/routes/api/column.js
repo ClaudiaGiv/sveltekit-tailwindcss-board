@@ -20,6 +20,7 @@ export async function post(req) {
 	})
 		.then((res) => res.json())
 		.then((result) => {
+			console.log(result)
 			response = result.data.createColumn;
 		})
 		.catch((e) => {
@@ -47,6 +48,7 @@ export async function put(req) {
 	})
 		.then((res) => res.json())
 		.then((result) => {
+			console.log(result)
 			response = result.data.updateColumn;
 		})
 		.catch((e) => {

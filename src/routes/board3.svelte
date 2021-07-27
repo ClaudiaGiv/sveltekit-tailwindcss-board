@@ -7,15 +7,12 @@
 	import Dialog from '$lib/dialog.svelte';
 	import board from '../stores/board';
 
-	console.log('board');
-	console.log($board.columns.data);
-	console.log($board.columns.data[0].cards.data);
-	console.log($board.columns.data[1].cards.data);
-	console.log($board.columns.data[2].cards.data);
+	$: console.log('board', $board.columns.data);
 	import {
 		UPDATE_CARD_WEIGHT_AND_COLUMN_MUTATION,
 		UPDATE_CARD_WEIGHT_MUTATION
 	} from '../../graphql/card';
+	import { UPDATE_COLUMN_WEIGHT_MUTATION } from '../../graphql/column';
 
 	overrideItemIdKeyNameBeforeInitialisingDndZones('_id');
 
@@ -32,11 +29,23 @@
 	//--- DND Functions ---
 
 	function handleDndConsiderColumns(e) {
+		const colIdx = $board.columns.data.findIndex((c) => c._id === e.detail.info.id);
+		fromColIdx = fromColIdx === -1 ? colIdx : fromColIdx;
 		$board.columns.data = e.detail.items;
 	}
 
 	function handleDndFinalizeColumns(e) {
 		$board.columns.data = e.detail.items;
+		const colIdx = $board.columns.data.findIndex((c) => c._id === e.detail.info.id);
+		const minColIdx = fromColIdx < colIdx ? fromColIdx : colIdx;
+		const columnsUpdatedByWeight = updateWeight($board.columns.data, minColIdx);
+		const { document, variables } = combineQuery('UpdateColumnsWeight').addN(
+			UPDATE_COLUMN_WEIGHT_MUTATION,
+			columnsUpdatedByWeight
+		);
+		updateColumns({ document, variables });
+		fromColIdx = -1;
+		return;
 	}
 
 	function handleDndConsiderCards(cid, e) {
@@ -44,10 +53,9 @@
 		const cardIdx = $board.columns.data[colIdx].cards.data.findIndex(
 			(c) => c._id === e.detail.info.id
 		);
-		$board.columns.data[colIdx].cards.data = e.detail.items;
-
 		fromColIdx = fromColIdx === -1 ? colIdx : fromColIdx;
 		fromCardIdx = fromCardIdx === -1 ? cardIdx : fromCardIdx;
+		$board.columns.data[colIdx].cards.data = e.detail.items;
 	}
 
 	function handleDndFinalizeCards(cid, e) {
@@ -60,13 +68,10 @@
 			//same column
 			console.log('same column');
 			const minCardIdx = fromCardIdx < cardIdx ? fromCardIdx : cardIdx;
-			const cardsForUpdateByWeight = updateCardsWeight(
-				$board.columns.data[colIdx].cards.data,
-				minCardIdx
-			);
+			const cardsUpdatedByWeight = updateWeight($board.columns.data[colIdx].cards.data, minCardIdx);
 			const { document, variables } = combineQuery('UpdateCardsWeight').addN(
 				UPDATE_CARD_WEIGHT_MUTATION,
-				cardsForUpdateByWeight
+				cardsUpdatedByWeight
 			);
 
 			updateCards({ document, variables });
@@ -78,13 +83,11 @@
 			//different columns
 			console.log('different columns');
 			finalized = 1;
-			let cardsForUpdateByWeight = updateCardsWeight(
+			let cardsForUpdateByWeight = updateWeight(
 				$board.columns.data[fromColIdx].cards.data,
 				fromCardIdx
 			);
-			cardsForUpdateByWeight.push(
-				...updateCardsWeight($board.columns.data[colIdx].cards.data, cardIdx)
-			);
+			cardsForUpdateByWeight.push(...updateWeight($board.columns.data[colIdx].cards.data, cardIdx));
 			let cardForupdateByColumn = {
 				id: $board.columns.data[colIdx].cards.data[cardIdx]._id,
 				weight: $board.columns.data[colIdx].cards.data[cardIdx].weight,
@@ -110,27 +113,30 @@
 
 	//--- Card updates Functions ---
 
-	function updateCardsWeight(cards, index) {
-		let cardsForUpdateByWeight = [];
-		if (cards === [] || cards === undefined) {
+	function updateWeight(elements, index) {
+		let elementsUpdated = [];
+		if (elements === [] || elements === undefined) {
 			return;
 		}
 		if (index === undefined) {
 			index = 0;
 		}
-		for (let i = index; i < cards.length; i++) {
-			cards[i].weight = i;
-			cardsForUpdateByWeight.push({
-				id: cards[i]._id,
-				weight: cards[i].weight
+		for (let i = index; i < elements.length; i++) {
+			elements[i].weight = i;
+			elementsUpdated.push({
+				id: elements[i]._id,
+				weight: elements[i].weight
 			});
 		}
-		return cardsForUpdateByWeight;
+		return elementsUpdated;
 	}
 
 	function editCard(colId, cardId) {
-		const colIdx = $board.columns.data.findIndex(c => c._id === colId);
-		object = {...$board.columns.data[colIdx].cards.data.find((c) => c._id === cardId), type: "card"};
+		const colIdx = $board.columns.data.findIndex((c) => c._id === colId);
+		object = {
+			...$board.columns.data[colIdx].cards.data.find((c) => c._id === cardId),
+			type: 'card'
+		};
 		editableCardColIdx = colIdx;
 		actionType = 'update';
 		showModal1 = true;
@@ -156,7 +162,7 @@
 
 	function addColumn() {
 		const columnWeight = $board.columns.data.length;
-		const boardId = $board._id
+		const boardId = $board._id;
 		object = {
 			type: 'column',
 			title: '',
@@ -169,13 +175,13 @@
 	}
 
 	function editColumn(colId) {
-		object = {...$board.columns.data.find((c) => c._id === colId), type: "column"};
+		object = { ...$board.columns.data.find((c) => c._id === colId), type: 'column' };
 		actionType = 'update';
 		showModal1 = true;
 	}
 
 	function isFirstColumn(colId) {
-		return $board.columns.data.findIndex(c => c._id === colId) === 0;
+		return $board.columns.data.findIndex((c) => c._id === colId) === 0;
 	}
 
 	//--- Column updates Functions ---
@@ -237,9 +243,27 @@
 		});
 		if (res.ok) {
 			const json = await res.json();
-			const colIdx = $board.columns.data.findIndex(c => c._id === colId);
+			const colIdx = $board.columns.data.findIndex((c) => c._id === colId);
 			const cardIdx = $board.columns.data[colIdx].cards.data.findIndex((c) => c._id === cardId);
 			board.removeCard(colIdx, cardIdx);
+		} else {
+			console.log(res.error());
+		}
+	}
+
+	async function updateColumns({ document, variables }) {
+		const mutationString = print(document);
+		const res = await fetch('api/columns', {
+			method: 'PUT',
+			body: JSON.stringify({
+				query: mutationString,
+				variables
+			})
+		});
+		console.log(res);
+		if (res.ok) {
+			const json = await res.json();
+			console.log(json);
 		} else {
 			console.log(res.error());
 		}
@@ -295,9 +319,12 @@
 	on:finalize={handleDndFinalizeColumns}
 >
 	{#each $board.columns.data as column (column._id)}
-		<div class="bg-gray-100 rounded-lg p-1 mx-1 rounded column" animate:flip={{ duration: flipDurationMs }}>
-			<p class="text-gray-700 font-semibold font-sans tracking-wide p-1 text-sm" on:click={() => editColumn(column._id)}>
-				{column.title}
+		<div
+			class="bg-gray-100 rounded-lg p-1 mx-1 rounded column"
+			animate:flip={{ duration: flipDurationMs }}
+		>
+			<p class="text-gray-700 font-semibold font-sans tracking-wide p-1 text-sm">
+				<span class="cursor-pointer" on:click={() => editColumn(column._id)}>{column.title}</span>
 			</p>
 			<!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
 			<div

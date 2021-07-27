@@ -15,6 +15,9 @@ const updateColumn = (column) =>
 	update((board) => {
 		const colIdx = board.columns.data.findIndex((c) => c._id === column._id);
 		board.columns.data[colIdx] = column;
+		board.columns.data[colIdx].cards.data.sort((x, y) => {
+			return x.weight - y.weight;
+		});
 		return board;
 	});
 
