@@ -3,13 +3,21 @@
 
 	const dispatch = createEventDispatcher();
 	export let object;
-	console.log(object);
 	export let actionType;
+	let isError = false;
+	let isEmptyTitle
+	$: isEmptyTitle = object.title === ''
 
 	function close() {
 		dispatch('close');
 	}
+
 	function save() {
+		console.log(object.title)
+		if (object.title === '') {
+			isError = true;
+			return;
+		}
 		dispatch(actionType + '-' + object.type, object);
 	}
 </script>
@@ -34,7 +42,7 @@
 			x-transition:leave-end="scale-0"
 		>
 			<header class="flex items-center justify-between p-2">
-				<h2 class="font-semibold">Edit card details</h2>
+				<h2 class="font-semibold">Edit {object.type} details</h2>
 				<button class="focus:outline-none p-2" on:click={close}>
 					<svg
 						class="fill-current"
@@ -50,14 +58,24 @@
 				</button>
 			</header>
 			<main class="p-2 text-center">
-				<div class="mb-3 pt-0">
+				<div class="mb-2 pt-0">
 					<input
 						bind:value={object.title}
 						type="text"
 						placeholder="Title"
-						class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring w-full"
+						class:border-red-500={isError && isEmptyTitle}
+						class:border={isError && isEmptyTitle}
+						class="px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow
+						outline-none focus:outline-none focus:ring w-full border"
 					/>
 				</div>
+				{#if isError && isEmptyTitle}
+					<span
+						class="flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1 mb-2"
+					>
+						Title is required!
+					</span>
+				{/if}
 				<div class="mb-3 pt-0">
 					<textarea
 						bind:value={object.description}

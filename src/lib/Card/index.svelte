@@ -5,7 +5,7 @@
 	export let card;
 </script>
 
-<div class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white my-2">
+<div class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white my-2 hover:border-indigo-600">
 	<div class="flex justify-between" on:click={() => dispatch('edit')}>
 		<p class="text-gray-700 font-semibold font-sans tracking-wide text-sm cursor-pointer">
 			{card.title} - {card.weight}
