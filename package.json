@@ -16,9 +16,8 @@
 		"@sveltejs/kit": "next",
 		"@typescript-eslint/eslint-plugin": "^4.19.0",
 		"@typescript-eslint/parser": "^4.19.0",
-		"@urql/devtools": "^2.0.3",
 		"autoprefixer": "^10.2.5",
-		"cssnano": "^5.0.2",
+		"cssnano": "^5.0.7",
 		"eslint": "^7.22.0",
 		"eslint-config-prettier": "^8.1.0",
 		"eslint-plugin-svelte3": "^3.2.0",
@@ -32,16 +31,9 @@
 		"svelte-dnd-action": "^0.9.9",
 		"svelte-preprocess": "^4.7.3",
 		"tailwindcss": "^2.1.1",
-		"tslib": "^2.0.0",
-		"typescript": "^4.0.0",
-		"vite": "^2.1.0"
+		"typescript": "^4.0.0"
 	},
 	"dependencies": {
-		"@urql/core": "^2.0.0",
-		"@urql/exchange-request-policy": "^0.1.1",
-		"@urql/svelte": "^1.2.2",
-		"graphql": "^15.5.0",
-		"graphql-combine-query": "^1.2.3",
-		"isomorphic-unfetch": "^3.1.0"
+		"graphql-combine-query": "^1.2.3"
 	}
 }
