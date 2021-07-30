@@ -21,6 +21,7 @@
 		"eslint": "^7.22.0",
 		"eslint-config-prettier": "^8.1.0",
 		"eslint-plugin-svelte3": "^3.2.0",
+		"gotrue-js": "^0.9.29",
 		"graphql-tag": "^2.12.5",
 		"postcss": "^8.2.13",
 		"postcss-load-config": "^3.0.1",

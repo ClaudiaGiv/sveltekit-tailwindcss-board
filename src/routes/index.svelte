@@ -15,9 +15,11 @@
 		return board;
 	}
 
-	export async function load({ fetch }) {
+	export async function load({ page, fetch }) {
 		const res = await fetch('/api/board1?userId=293327431033422337');
-		console.log('inside load');
+		console.log('page path');
+		console.log(page.path);
+		console.log(page);
 
 		if (res.ok) {
 			const json = await res.json();
@@ -31,6 +33,16 @@
 			error: new Error()
 		};
 	}
+</script>
+
+<script>
+	// import { Link } from "svelte-routing";
+	export let location;
+
+	// $: queryParam = new URLSearchParams(location.search).get("id")
+
+	$: console.log('currentPath', location);
+
 </script>
 
 <section>
