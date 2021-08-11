@@ -17,9 +17,6 @@
 
 	export async function load({ page, fetch }) {
 		const res = await fetch('/api/board1?userId=293327431033422337');
-		console.log('page path');
-		console.log(page.path);
-		console.log(page);
 
 		if (res.ok) {
 			const json = await res.json();
@@ -36,12 +33,35 @@
 </script>
 
 <script>
-	// import { Link } from "svelte-routing";
-	export let location;
+	import { onMount } from 'svelte';
+	import { auth } from '../../constants/go-true';
+	let confirmationToken;
+	console.log("start confirm")
+	onMount( () => {
+		confirmationToken = window.location.href.substring(1)
+			.split("confirmation_token=")[1]
 
-	// $: queryParam = new URLSearchParams(location.search).get("id")
-
-	$: console.log('currentPath', location);
+		// confirmationToken = decodeURIComponent(window.location.search)
+		// 	.substring(1)
+		// 	.split("confirmation_token=")[1];
+		console.log(confirmationToken)
+		if (confirmationToken !== undefined) {
+			auth
+				.confirm(confirmationToken)
+				.then(response => {
+					console.log("User has been confirmed ", response);
+					// this.saveUser(response);
+					// this.goToPage("login", {
+					// 	successfulConfirmation: "Registration confirmed!"
+					// });
+				})
+				.catch(error => {
+					console.log("An error occurred trying to confirm the user ", error);
+					this.tokenConfirmationError =
+						"The confirmation token for sign up was already used!";
+				});
+		}
+	});
 
 </script>
 
