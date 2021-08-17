@@ -34,35 +34,53 @@
 
 <script>
 	import { onMount } from 'svelte';
+	import Alert from '$lib/alert.svelte';
 	import { auth } from '../../constants/go-true';
-	let confirmationToken;
-	console.log("start confirm")
-	onMount( () => {
-		confirmationToken = window.location.href.substring(1)
-			.split("confirmation_token=")[1]
+	let tokenConfirmationError;
+	let successMessage;
 
-		// confirmationToken = decodeURIComponent(window.location.search)
-		// 	.substring(1)
-		// 	.split("confirmation_token=")[1];
-		console.log(confirmationToken)
+	function getToken(separator) {
+		return window.location.href.substring(1).split(separator)[1];
+	}
+	function recoverUserAccountAfterPasswordReset() {
+		const recoveryToken = getToken('recovery_token=');
+		if (recoveryToken !== undefined) {
+			auth
+				.recover(recoveryToken, true)
+				.then((response) => {
+					console.log('Logged in as %s', JSON.stringify({ response }));
+					// this.goToPage("password-reset");
+				})
+				.catch((error) => {
+					console.log('Failed to verify recover token: %o', error);
+					tokenConfirmationError = 'The password recovery token was already used!';
+				});
+		}
+	}
+	function confirmUserAfterSignUp() {
+		const confirmationToken = getToken('confirmation_token=');
 		if (confirmationToken !== undefined) {
 			auth
 				.confirm(confirmationToken)
-				.then(response => {
-					console.log("User has been confirmed ", response);
+				.then((response) => {
+					console.log('User has been confirmed ', response);
+					successMessage = 'Your account has been confirmed!';
 					// this.saveUser(response);
 					// this.goToPage("login", {
 					// 	successfulConfirmation: "Registration confirmed!"
 					// });
 				})
-				.catch(error => {
-					console.log("An error occurred trying to confirm the user ", error);
-					this.tokenConfirmationError =
-						"The confirmation token for sign up was already used!";
+				.catch((error) => {
+					console.log('An error occurred trying to confirm the user ', error);
+					tokenConfirmationError = 'The confirmation token for sign up was already used!';
 				});
 		}
-	});
+	}
 
+	onMount(() => {
+		confirmUserAfterSignUp();
+		recoverUserAccountAfterPasswordReset();
+	});
 </script>
 
 <section>
@@ -71,4 +89,7 @@
 		Visit <a class="text-blue-600 underline" href="https://kit.svelte.dev">kit.svelte.dev</a> to read
 		the documentation
 	</p>
+	<!--{#if successMessage}-->
+		<Alert message={successMessage} />
+	<!--{/if}-->
 </section>

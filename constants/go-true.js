@@ -6,6 +6,7 @@ import { NETLIFY_IDENTITY_URL } from './api-constants';
 
 export const auth = new GoTrue({
 	APIUrl: NETLIFY_IDENTITY_URL,
+	audience: '',
 	setCookie: true
 });
 console.log(GoTrue)
