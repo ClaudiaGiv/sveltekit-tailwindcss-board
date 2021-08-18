@@ -4,8 +4,8 @@ import { BOARD_BY_USER_QUERY, CREATE_DEFAULT_BOARD_MUTATION } from '../../../gra
 
 //TODO: how can I have multiple get functions in the same endpoint? is it needed?
 export async function get(req) {
-	console.log("req")
-	console.log(req.query)
+	console.log('req');
+	console.log(req.query);
 	let query = BOARD_BY_USER_QUERY;
 	const variables = { userId: '293327431033422337' };
 	let response;

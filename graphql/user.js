@@ -1,4 +1,3 @@
-
 export const CREATE_USER_MUTATION = `
   mutation createUser(
     $email: String!

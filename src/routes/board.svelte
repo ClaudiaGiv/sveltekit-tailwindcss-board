@@ -1,4 +1,4 @@
-<script context='module'>
+<script context="module">
 	export async function load({ fetch }) {
 		const res = await fetch('/api/board');
 
@@ -141,59 +141,16 @@
 	<div class="flex-1 overflow-auto">
 		<main class="p-3 inline-flex">
 			<div class="p-3 w-80 bg-gray-100 rounded-md">
-				<h3 class="text-sm font-medium text-gray-900">{board.col1label }</h3>
+				<h3 class="text-sm font-medium text-gray-900">{board.col1label}</h3>
 				<ul class="mt-2">
-					{#each board.col1cards as col }
-					<li class="block p-5 rounded-md shadow bg-white my-2">
-						<a href="#">
-							<div class="flex justify-between">
-								<p class="text-sm font-medium text-gray-900 leading-snug">
-									{col.description}
-								</p>
-								<span
-									><img
-										class="h-6 w-6 rounded-full object-cover"
-										src="{col.img}"
-										alt=""
-									/></span
-								>
-							</div>
-							<div class="flex justify-between items-baseline">
-								<div class="text-sm text-gray-600 mt-2">
-									<time datetime="2019-09-14">{col.timestamp}</time>
-								</div>
-								<div>
-									<span class="px-2 py-1 leading-tight flex items-center {col.issuecolor}">
-										<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
-											<circle cx="4" cy="4" r="3" />
-										</svg>
-										<span class="ml-2 text-sm font-medium text-green-900 rounded"
-											>{col.issuetype}</span
-										>
-									</span>
-								</div>
-							</div>
-						</a>
-					</li>
-					{/each}
-				</ul>
-			</div>
-			<div class="p-3 w-80 bg-gray-100 rounded-md">
-				<h3 class="text-sm font-medium text-gray-900">{board.col2label }</h3>
-				<ul class="mt-2">
-					{#each board.col2cards as col }
+					{#each board.col1cards as col}
 						<li class="block p-5 rounded-md shadow bg-white my-2">
 							<a href="#">
 								<div class="flex justify-between">
 									<p class="text-sm font-medium text-gray-900 leading-snug">
 										{col.description}
 									</p>
-									<span
-									><img
-										class="h-6 w-6 rounded-full object-cover"
-										src="{col.img}"
-										alt=""
-									/></span
+									<span><img class="h-6 w-6 rounded-full object-cover" src={col.img} alt="" /></span
 									>
 								</div>
 								<div class="flex justify-between items-baseline">
@@ -201,14 +158,14 @@
 										<time datetime="2019-09-14">{col.timestamp}</time>
 									</div>
 									<div>
-									<span class="px-2 py-1 leading-tight flex items-center {col.issuecolor}">
-										<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
-											<circle cx="4" cy="4" r="3" />
-										</svg>
-										<span class="ml-2 text-sm font-medium text-green-900 rounded"
-										>{col.issuetype}</span
-										>
-									</span>
+										<span class="px-2 py-1 leading-tight flex items-center {col.issuecolor}">
+											<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
+												<circle cx="4" cy="4" r="3" />
+											</svg>
+											<span class="ml-2 text-sm font-medium text-green-900 rounded"
+												>{col.issuetype}</span
+											>
+										</span>
 									</div>
 								</div>
 							</a>
@@ -217,21 +174,16 @@
 				</ul>
 			</div>
 			<div class="p-3 w-80 bg-gray-100 rounded-md">
-				<h3 class="text-sm font-medium text-gray-900">{board.col3label }</h3>
+				<h3 class="text-sm font-medium text-gray-900">{board.col2label}</h3>
 				<ul class="mt-2">
-					{#each board.col3cards as col }
+					{#each board.col2cards as col}
 						<li class="block p-5 rounded-md shadow bg-white my-2">
 							<a href="#">
 								<div class="flex justify-between">
 									<p class="text-sm font-medium text-gray-900 leading-snug">
 										{col.description}
 									</p>
-									<span
-									><img
-										class="h-6 w-6 rounded-full object-cover"
-										src="{col.img}"
-										alt=""
-									/></span
+									<span><img class="h-6 w-6 rounded-full object-cover" src={col.img} alt="" /></span
 									>
 								</div>
 								<div class="flex justify-between items-baseline">
@@ -239,14 +191,14 @@
 										<time datetime="2019-09-14">{col.timestamp}</time>
 									</div>
 									<div>
-									<span class="px-2 py-1 leading-tight flex items-center {col.issuecolor}">
-										<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
-											<circle cx="4" cy="4" r="3" />
-										</svg>
-										<span class="ml-2 text-sm font-medium text-green-900 rounded"
-										>{col.issuetype}</span
-										>
-									</span>
+										<span class="px-2 py-1 leading-tight flex items-center {col.issuecolor}">
+											<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
+												<circle cx="4" cy="4" r="3" />
+											</svg>
+											<span class="ml-2 text-sm font-medium text-green-900 rounded"
+												>{col.issuetype}</span
+											>
+										</span>
 									</div>
 								</div>
 							</a>
@@ -255,21 +207,16 @@
 				</ul>
 			</div>
 			<div class="p-3 w-80 bg-gray-100 rounded-md">
-				<h3 class="text-sm font-medium text-gray-900">{board.col4label }</h3>
+				<h3 class="text-sm font-medium text-gray-900">{board.col3label}</h3>
 				<ul class="mt-2">
-					{#each board.col4cards as col }
+					{#each board.col3cards as col}
 						<li class="block p-5 rounded-md shadow bg-white my-2">
 							<a href="#">
 								<div class="flex justify-between">
 									<p class="text-sm font-medium text-gray-900 leading-snug">
 										{col.description}
 									</p>
-									<span
-									><img
-										class="h-6 w-6 rounded-full object-cover"
-										src="{col.img}"
-										alt=""
-									/></span
+									<span><img class="h-6 w-6 rounded-full object-cover" src={col.img} alt="" /></span
 									>
 								</div>
 								<div class="flex justify-between items-baseline">
@@ -277,14 +224,47 @@
 										<time datetime="2019-09-14">{col.timestamp}</time>
 									</div>
 									<div>
-									<span class="px-2 py-1 leading-tight flex items-center {col.issuecolor}">
-										<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
-											<circle cx="4" cy="4" r="3" />
-										</svg>
-										<span class="ml-2 text-sm font-medium text-green-900 rounded"
-										>{col.issuetype}</span
-										>
-									</span>
+										<span class="px-2 py-1 leading-tight flex items-center {col.issuecolor}">
+											<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
+												<circle cx="4" cy="4" r="3" />
+											</svg>
+											<span class="ml-2 text-sm font-medium text-green-900 rounded"
+												>{col.issuetype}</span
+											>
+										</span>
+									</div>
+								</div>
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</div>
+			<div class="p-3 w-80 bg-gray-100 rounded-md">
+				<h3 class="text-sm font-medium text-gray-900">{board.col4label}</h3>
+				<ul class="mt-2">
+					{#each board.col4cards as col}
+						<li class="block p-5 rounded-md shadow bg-white my-2">
+							<a href="#">
+								<div class="flex justify-between">
+									<p class="text-sm font-medium text-gray-900 leading-snug">
+										{col.description}
+									</p>
+									<span><img class="h-6 w-6 rounded-full object-cover" src={col.img} alt="" /></span
+									>
+								</div>
+								<div class="flex justify-between items-baseline">
+									<div class="text-sm text-gray-600 mt-2">
+										<time datetime="2019-09-14">{col.timestamp}</time>
+									</div>
+									<div>
+										<span class="px-2 py-1 leading-tight flex items-center {col.issuecolor}">
+											<svg class="h-2 w-2 text-teal-500" viewbox="0 0 8 8" fill="currentColor">
+												<circle cx="4" cy="4" r="3" />
+											</svg>
+											<span class="ml-2 text-sm font-medium text-green-900 rounded"
+												>{col.issuetype}</span
+											>
+										</span>
 									</div>
 								</div>
 							</a>

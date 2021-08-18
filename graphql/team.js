@@ -1,4 +1,3 @@
-
 export const ALL_TEAMS_QUERY = `
   query allTeams {
     allTeams {

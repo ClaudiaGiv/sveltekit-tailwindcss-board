@@ -1,4 +1,3 @@
-
 export const ALL_ORGANIZATIONS_QUERY = `
   query allOrganizations {
     allOrganizations {

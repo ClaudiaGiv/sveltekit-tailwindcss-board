@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+import gql from 'graphql-tag';
 
 export const CREATE_COLUMN_MUTATION = `
   mutation createColumn(
@@ -59,12 +59,12 @@ export const UPDATE_COLUMN_MUTATION = `
 `;
 
 export const UPDATE_COLUMN_WEIGHT_MUTATION = gql`
-  mutation updateColumn($id: ID!, $weight: Int!) {
-    updateColumn(id: $id, data: { weight: $weight }) {
-      _id
-      weight
-    }
-  }
+	mutation updateColumn($id: ID!, $weight: Int!) {
+		updateColumn(id: $id, data: { weight: $weight }) {
+			_id
+			weight
+		}
+	}
 `;
 
 export const DELETE_COLUMN_MUTATION = `

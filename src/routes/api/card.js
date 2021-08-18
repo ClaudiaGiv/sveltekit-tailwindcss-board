@@ -1,10 +1,14 @@
 export const FAUNA_API = import.meta.env.VITE_FAUNA_API;
 export const FAUNA_KEY = import.meta.env.VITE_FAUNA_KEY;
-import { CREATE_CARD_MUTATION, UPDATE_CARD_MUTATION, DELETE_CARD_MUTATION } from '../../../graphql/card';
+import {
+	CREATE_CARD_MUTATION,
+	UPDATE_CARD_MUTATION,
+	DELETE_CARD_MUTATION
+} from '../../../graphql/card';
 
 export async function post(req) {
-	console.log("req.body")
-	console.log(req.body)
+	console.log('req.body');
+	console.log(req.body);
 	let variables = JSON.parse(req.body);
 	const query = CREATE_CARD_MUTATION;
 	let response;
@@ -32,8 +36,8 @@ export async function post(req) {
 }
 
 export async function put(req) {
-	console.log("req.body")
-	console.log(req.body)
+	console.log('req.body');
+	console.log(req.body);
 	let response;
 	await fetch(FAUNA_API.toString(), {
 		method: 'POST',

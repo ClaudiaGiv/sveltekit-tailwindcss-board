@@ -22,7 +22,7 @@
 			.login(username, password)
 			.then((response) => {
 				console.log('Success! Response:', JSON.stringify({ response }));
-				goto('/', );
+				goto('/');
 			})
 			.catch((error) => console.log("It's an error", error));
 	}
@@ -58,6 +58,12 @@
 			{#if passwordError && password === ''}
 				<p class="text-red-500 text-xs italic">Please provide a valid password.</p>
 			{/if}
+			<a
+				class="inline-block font-bold text-sm text-blue-500 hover:text-blue-800 ml-auto"
+				href="/password-recovery"
+			>
+				Forgot password
+			</a>
 		</div>
 		<div class="flex items-center justify-between">
 			<button

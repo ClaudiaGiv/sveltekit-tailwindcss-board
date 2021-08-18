@@ -3,8 +3,8 @@ import { CREATE_COLUMN_MUTATION, UPDATE_COLUMN_MUTATION } from '../../../graphql
 import { DELETE_COLUMN_MUTATION } from '../../../graphql/column';
 
 export async function post(req) {
-	console.log("req.body")
-	console.log(req.body)
+	console.log('req.body');
+	console.log(req.body);
 	let variables = JSON.parse(req.body);
 	const query = CREATE_COLUMN_MUTATION;
 	let response;
@@ -21,7 +21,7 @@ export async function post(req) {
 	})
 		.then((res) => res.json())
 		.then((result) => {
-			console.log(result)
+			console.log(result);
 			response = result.data.createColumn;
 		})
 		.catch((e) => {
@@ -33,8 +33,8 @@ export async function post(req) {
 }
 
 export async function put(req) {
-	console.log("req.body")
-	console.log(req.body)
+	console.log('req.body');
+	console.log(req.body);
 	let response;
 	await fetch(FAUNA_API.toString(), {
 		method: 'POST',
@@ -49,7 +49,7 @@ export async function put(req) {
 	})
 		.then((res) => res.json())
 		.then((result) => {
-			console.log(result)
+			console.log(result);
 			response = result.data.updateColumn;
 		})
 		.catch((e) => {
@@ -62,8 +62,8 @@ export async function put(req) {
 }
 
 export async function del(req) {
-	console.log("req.body")
-	console.log(req.body)
+	console.log('req.body');
+	console.log(req.body);
 	let response;
 	await fetch(FAUNA_API.toString(), {
 		method: 'POST',
@@ -78,7 +78,7 @@ export async function del(req) {
 	})
 		.then((res) => res.json())
 		.then((result) => {
-			console.log(result)
+			console.log(result);
 			response = result.data.deleteColumn;
 		})
 		.catch((e) => {
@@ -89,4 +89,3 @@ export async function del(req) {
 		body: response
 	};
 }
-

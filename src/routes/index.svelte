@@ -36,6 +36,7 @@
 	import { onMount } from 'svelte';
 	import Alert from '$lib/alert.svelte';
 	import { auth } from '../../constants/go-true';
+	import { goto } from '$app/navigation';
 	let tokenConfirmationError;
 	let successMessage;
 
@@ -49,7 +50,7 @@
 				.recover(recoveryToken, true)
 				.then((response) => {
 					console.log('Logged in as %s', JSON.stringify({ response }));
-					// this.goToPage("password-reset");
+					goto('/password-reset');
 				})
 				.catch((error) => {
 					console.log('Failed to verify recover token: %o', error);
@@ -66,9 +67,7 @@
 					console.log('User has been confirmed ', response);
 					successMessage = 'Your account has been confirmed!';
 					// this.saveUser(response);
-					// this.goToPage("login", {
-					// 	successfulConfirmation: "Registration confirmed!"
-					// });
+					goto('/login');
 				})
 				.catch((error) => {
 					console.log('An error occurred trying to confirm the user ', error);
@@ -90,6 +89,6 @@
 		the documentation
 	</p>
 	<!--{#if successMessage}-->
-		<Alert message={successMessage} />
+	<Alert message={successMessage} />
 	<!--{/if}-->
 </section>

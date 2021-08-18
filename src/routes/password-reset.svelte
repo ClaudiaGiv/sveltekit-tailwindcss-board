@@ -1,30 +1,30 @@
 <script>
 	import { auth } from '../../constants/go-true';
 	import { goto } from '$app/navigation';
-
-	let username = '';
+	let currentUser = auth.currentUser();
+	console.log(currentUser)
+	let username = currentUser.email;
 	let password1 = '';
 	let password2 = '';
-	let usernameError = false;
 	let passwordError = false;
 	async function resetPassword() {
-		if (username === '') {
-			usernameError = true;
-			return;
-		}
-		if (password1 === '' || password2 === '') {
+		console.log(currentUser)
+		if (password1 === '' || password2 === '' || password1 !== password2) {
 			passwordError = true;
 			return;
 		}
-		usernameError = false;
 		passwordError = false;
-		auth
-			.signup(username, password1)
-			.then((response) => {
-				console.log('Confirmation email sent', response);
-				goto('/');
+		this.errorMessage = '';
+		currentUser
+			.update({ password: password1 })
+			.then(() => {
+				console.log('The password was changed successfully!');
+				goto('/')
 			})
-			.catch((error) => console.log("It's an error", error));
+			.catch((error) => {
+				console.log('Failed to update user: %o', error);
+				this.errorMessage = 'Error resetting the password. Please try again!';
+			});
 	}
 	$: console.log(username);
 	$: console.log(password1);
@@ -37,16 +37,13 @@
 		<div class="mb-4">
 			<label class="block text-gray-700 text-sm font-bold mb-2" for="username"> Username </label>
 			<input
-				class:border-red-500={usernameError && username === ''}
 				class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
 				id="username"
 				type="text"
 				placeholder="Username"
+				disabled
 				bind:value={username}
 			/>
-			{#if usernameError && username === ''}
-				<p class="text-red-500 text-xs italic">Please provide a valid username.</p>
-			{/if}
 		</div>
 		<div class="mb-6">
 			<label class="block text-gray-700 text-sm font-bold mb-2" for="password1"> Password </label>

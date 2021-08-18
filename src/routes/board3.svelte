@@ -337,7 +337,9 @@
 			class="bg-gray-100 rounded-lg p-1 mx-1 rounded column"
 			animate:flip={{ duration: flipDurationMs }}
 		>
-			<div class="text-gray-700 font-semibold font-sans tracking-wide p-1 text-sm flex justify-between">
+			<div
+				class="text-gray-700 font-semibold font-sans tracking-wide p-1 text-sm flex justify-between"
+			>
 				<span class="cursor-pointer" on:click={() => editColumn(column._id)}>{column.title}</span>
 				<button
 					class="h-8 text-sm text-red-700 transition-colors rounded-lg hover:bg-red-100 hover:"

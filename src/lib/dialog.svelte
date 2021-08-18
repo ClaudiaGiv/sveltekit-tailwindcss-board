@@ -5,15 +5,15 @@
 	export let object;
 	export let actionType;
 	let isError = false;
-	let isEmptyTitle
-	$: isEmptyTitle = object.title === ''
+	let isEmptyTitle;
+	$: isEmptyTitle = object.title === '';
 
 	function close() {
 		dispatch('close');
 	}
 
 	function save() {
-		console.log(object.title)
+		console.log(object.title);
 		if (object.title === '') {
 			isError = true;
 			return;

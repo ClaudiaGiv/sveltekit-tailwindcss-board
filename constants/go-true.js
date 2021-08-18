@@ -9,7 +9,7 @@ export const auth = new GoTrue({
 	audience: '',
 	setCookie: true
 });
-console.log(GoTrue)
+console.log(GoTrue);
 
 // GoTrue.APIUrl = NETLIFY_IDENTITY_URL
 // console.log(GoTrue)

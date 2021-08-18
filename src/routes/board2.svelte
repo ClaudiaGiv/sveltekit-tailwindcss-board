@@ -6,7 +6,7 @@
 	import board from '../stores/board';
 	const flipDurationMs = 200;
 	let columnItems = $board.columns.data;
-	console.log(columnItems)
+	console.log(columnItems);
 	function handleDndConsiderColumns(e) {
 		columnItems = e.detail.items;
 	}
