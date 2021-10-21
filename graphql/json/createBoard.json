@@ -1,0 +1,93 @@
+{
+	"board": {
+		"title": "Exercise1",
+		"description": "kanban board",
+		"columns": {
+			"create": [
+				{
+					"title": "To do",
+					"description": "to do",
+					"cards": {
+						"create": [
+							{
+								"description": "Add discount code to checkout page1",
+								"title": "Add discount code to checkout page1",
+								"assignee": { "connect": 1 }
+							},
+							{
+								"description": "Fix discount code to checkout page1",
+								"title": "Fix discount code to checkout page1",
+								"assignee": { "connect": 2 }
+							},
+							{
+								"description": "Test discount code to checkout page1",
+								"title": "Test discount code to checkout page1",
+								"assignee": { "connect": 3 }
+							},
+							{
+								"description": "Release discount code to checkout page1",
+								"title": "Release discount code to checkout page1",
+								"assignee": { "connect": 4 }
+							}
+						]
+					}
+				},
+				{
+					"title": "Doing",
+					"description": "doing",
+					"cards": {
+						"create": [
+							{
+								"description": "Add discount code to checkout page2",
+								"title": "Add discount code to checkout page"
+							},
+							{
+								"description": "Fix discount code to checkout page2",
+								"title": "Fix discount code to checkout page"
+							},
+							{
+								"description": "Test discount code to checkout page2",
+								"title": "Test discount code to checkout page"
+							},
+							{
+								"description": "Fix discount code to checkout page2",
+								"title": "Fix discount code to checkout page"
+							},
+							{
+								"description": "Test discount code to checkout page2",
+								"title": "Test discount code to checkout page"
+							},
+							{
+								"description": "Release discount code to checkout page2",
+								"title": "Release discount code to checkout page"
+							}
+						]
+					}
+				},
+				{
+					"title": "Done",
+					"description": "done",
+					"cards": {
+						"create": [
+							{
+								"title": "Add discount code to checkout page3",
+								"description": "Add discount code to checkout page3"
+							},
+							{
+								"title": "Fix discount code to checkout page3",
+								"description": "Fix discount code to checkout page3"
+							},
+							{
+								"title": "Release discount code to checkout page3",
+								"description": "Release discount code to checkout page3"
+							}
+						]
+					}
+				}
+			]
+		},
+		"user": {
+			"connect": "293327959669867009"
+		}
+	}
+}

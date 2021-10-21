@@ -1,0 +1,24 @@
+mutation createOrganization($organization: [OrganizationInput!]) {
+    createOrganization(data: $organization) {
+        _id
+        name
+        teams{
+            data{
+                _id
+                name
+            }
+        }
+        users {
+            data{
+                _id
+                email
+            }
+        }
+        admins {
+            data{
+                _id
+                email
+            }
+        }
+    }
+}

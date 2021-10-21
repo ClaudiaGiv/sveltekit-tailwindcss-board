@@ -1,0 +1,17 @@
+Query(
+  Lambda(
+    ["users"],
+    Map(
+      Var("users"),
+      Lambda("user", Do(Create(Ref(Collection("User"), Select(["id"], Var("user"))),
+      {
+        data: {
+          email: Select(["email"], Var("user")),
+          name: Select(["name"], Var("user"))
+        }
+
+      }
+      )))
+    )
+  )
+)

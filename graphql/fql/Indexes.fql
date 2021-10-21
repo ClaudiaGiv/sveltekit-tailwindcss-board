@@ -1,0 +1,24 @@
+{
+  name: "columnsByBoard",
+  unique: false,
+  serialized: true,
+  source: "Column",
+  terms: [
+    {
+      field: ["data", "board"]
+    }
+  ]
+}
+
+{
+  name: "cardsByColumn",
+  unique: false,
+  serialized: true,
+  source: "Card",
+  terms: [
+    {
+      field: ["data", "column"]
+    }
+  ]
+}
+

@@ -49,6 +49,15 @@ type User {
 	team: Team
 }
 
+input UserCreateInput {
+	id: ID
+	name: String
+	email: String
+	roles: [Role]
+	identityId: String
+	authenticated: Boolean
+}
+
 type Organization {
 	name: String!
 	admins: [User]
@@ -91,6 +100,7 @@ type Card {
 	comments: [String]
 	primaryLabel: String
 	weight: Int
+	assignee: User
 }
 
 type Query {
@@ -105,3 +115,9 @@ type Query {
 	findOrganizationByName(name: String!): Team
 	boardByUserId(userId: String!): Board! @resolver(name: "boardByUserId", paginated: true)
 }
+
+type Mutation {
+	createUsers(users: [UserCreateInput]!): [User] @resolver(name: "CreateUsers")
+	moveCards(cardsIds:[ID]!, columnId: ID!): [Card] @resolver (name: "MoveCards")
+}
+

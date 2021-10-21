@@ -1,0 +1,14 @@
+mutation createColumn($column: ColumnInput!) {
+	createColumn(data: $column) {
+		_id
+		title
+		description
+		cards {
+			data {
+				_id
+				title
+				description
+			}
+		}
+	}
+}

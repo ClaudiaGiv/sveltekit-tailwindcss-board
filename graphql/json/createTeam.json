@@ -1,0 +1,8 @@
+{
+	"team": {
+		"name": "team1",
+		"users": {
+			"connect": ["1", "2"]
+		}
+	}
+}

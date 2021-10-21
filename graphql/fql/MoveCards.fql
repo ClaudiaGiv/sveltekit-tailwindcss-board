@@ -1,0 +1,19 @@
+Query(
+  Lambda(
+    ["cardIds", "columnId"],
+    Map(
+      Var("cardIds"),
+      Lambda(
+        "cardId",
+           Update(
+              Ref(Collection('Card'), Var('cardId')),
+              {
+                data: {
+                  column:  Ref(Collection("Column"), Var("columnId"))
+                },
+              },
+            )
+      )
+    )
+  )
+)

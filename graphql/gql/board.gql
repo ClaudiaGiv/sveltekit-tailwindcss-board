@@ -1,0 +1,19 @@
+mutation createBoard($board: BoardInput!) {
+	createBoard(data: $board) {
+		_id
+		title
+		description
+		columns {
+			data {
+				_id
+				title
+				cards {
+					data {
+						_id
+						title
+					}
+				}
+			}
+		}
+	}
+}

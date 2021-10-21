@@ -1,0 +1,11 @@
+mutation moveCardsFromToColumn($cardsIds: [ID]!, $columnId: ID!) {
+    updateCard(cardsIds: $cardsIds, columnId: $columnId) {
+        _id
+        title
+        assignee
+        column {
+            _id
+            title
+        }
+    }
+}
