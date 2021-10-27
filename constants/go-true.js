@@ -13,4 +13,4 @@ console.log(GoTrue);
 
 // GoTrue.APIUrl = NETLIFY_IDENTITY_URL
 // console.log(GoTrue)
-// export const auth = GoTrue
+export const auth = GoTrue
