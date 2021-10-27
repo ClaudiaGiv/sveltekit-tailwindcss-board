@@ -291,7 +291,9 @@
 		});
 		if (res.ok) {
 			const json = await res.json();
+			console.log(json)
 			$board.columns.data = [...$board.columns.data, json];
+			console.log($board)
 		} else {
 			console.log(res.error());
 		}

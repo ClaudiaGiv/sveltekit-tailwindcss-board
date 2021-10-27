@@ -4,11 +4,11 @@ import GoTrue from 'gotrue-js';
 import { NETLIFY_IDENTITY_URL } from './api-constants';
 // const GoTrue = require('gotrue-js')
 
-export const auth = new GoTrue({
-	APIUrl: NETLIFY_IDENTITY_URL,
-	audience: '',
-	setCookie: true
-});
+// export const auth = new GoTrue({
+// 	APIUrl: NETLIFY_IDENTITY_URL,
+// 	audience: '',
+// 	setCookie: true
+// });
 console.log(GoTrue);
 
 // GoTrue.APIUrl = NETLIFY_IDENTITY_URL

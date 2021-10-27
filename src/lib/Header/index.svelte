@@ -19,19 +19,14 @@
 					>Board</a
 				>
 				<a
-					href="/board1"
+					href="/board-gql"
 					class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
-					>Board1</a
+					>Board GQL</a
 				>
 				<a
-					href="/board2"
+					href="/board-fql"
 					class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
-					>Board2</a
-				>
-				<a
-					href="/board3"
-					class="p-2 lg:px-4 md:mx-2 text-gray-600 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
-					>Board3</a
+					>Board FQL</a
 				>
 				<a
 					href="/login"
