@@ -1,3 +1,37 @@
+<script context="module">
+	import board from '../stores/board';
+
+	console.log('before load');
+
+	function sortBoardElements(board) {
+		board.columns.data.sort((x, y) => {
+			return x.weight - y.weight;
+		});
+		board.columns.data.forEach((el) =>
+			el.cards.data.sort((x, y) => {
+				return x.weight - y.weight;
+			})
+		);
+		return board;
+	}
+
+	export async function load({ page, fetch }) {
+		const res = await fetch('/api/board1?userId=293327431033422337');
+
+		if (res.ok) {
+			const json = await res.json();
+			const board1 = await json;
+			console.log(board1);
+			board.set(sortBoardElements(board1));
+			return {};
+		}
+		return {
+			status: res.status,
+			error: new Error()
+		};
+	}
+</script>
+
 <script>
 	import { flip } from 'svelte/animate';
 	import { dndzone, overrideItemIdKeyNameBeforeInitialisingDndZones } from 'svelte-dnd-action';
@@ -5,7 +39,6 @@
 	import { print } from 'graphql/language/printer.js';
 	import Card from '$lib/Card/index.svelte';
 	import Dialog from '$lib/dialog.svelte';
-	import board from '../stores/board';
 
 	$: console.log('board', $board.columns.data);
 	import {
