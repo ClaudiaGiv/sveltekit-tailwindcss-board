@@ -1,6 +1,6 @@
 export const FAUNA_API = import.meta.env.VITE_FAUNA_API;
 export const FAUNA_KEY = import.meta.env.VITE_FAUNA_KEY;
-import { BOARD_BY_USER_QUERY, CREATE_DEFAULT_BOARD_MUTATION } from '../../../graphql/board';
+import { BOARD_BY_USER_QUERY, CREATE_DEFAULT_BOARD_MUTATION } from '../../../graphql/js/board';
 
 //TODO: how can I have multiple get functions in the same endpoint? is it needed?
 export async function get(req) {

@@ -1,6 +1,6 @@
 import { FAUNA_API, FAUNA_KEY } from './card';
-import { CREATE_COLUMN_MUTATION, UPDATE_COLUMN_MUTATION } from '../../../graphql/column';
-import { DELETE_COLUMN_MUTATION } from '../../../graphql/column';
+import { CREATE_COLUMN_MUTATION, UPDATE_COLUMN_MUTATION } from '../../../graphql/js/column';
+import { DELETE_COLUMN_MUTATION } from '../../../graphql/js/column';
 
 export async function post(req) {
 	console.log('req.body');

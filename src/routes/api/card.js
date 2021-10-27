@@ -4,7 +4,7 @@ import {
 	CREATE_CARD_MUTATION,
 	UPDATE_CARD_MUTATION,
 	DELETE_CARD_MUTATION
-} from '../../../graphql/card';
+} from '../../../graphql/js/card';
 
 export async function post(req) {
 	console.log('req.body');

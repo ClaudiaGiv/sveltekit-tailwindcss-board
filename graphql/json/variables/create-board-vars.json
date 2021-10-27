@@ -12,22 +12,30 @@
 							{
 								"description": "Add discount code to checkout page1",
 								"title": "Add discount code to checkout page1",
-								"assignee": { "connect": 1 }
+								"assignee": {
+									"connect": 1
+								}
 							},
 							{
 								"description": "Fix discount code to checkout page1",
 								"title": "Fix discount code to checkout page1",
-								"assignee": { "connect": 2 }
+								"assignee": {
+									"connect": 2
+								}
 							},
 							{
 								"description": "Test discount code to checkout page1",
 								"title": "Test discount code to checkout page1",
-								"assignee": { "connect": 3 }
+								"assignee": {
+									"connect": 3
+								}
 							},
 							{
 								"description": "Release discount code to checkout page1",
 								"title": "Release discount code to checkout page1",
-								"assignee": { "connect": 4 }
+								"assignee": {
+									"connect": 4
+								}
 							}
 						]
 					}

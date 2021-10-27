@@ -1,0 +1,57 @@
+{
+	"query": "mutation createUsers($users: [UserCreateInput]!) {\n\tcreateUsers(users: $users) {\n\t\t_id\n\t\tname\n\t\temail\n\t}\n}",
+	"variables": {
+		"users": [
+			{
+				"id": 1,
+				"name": "Mark",
+				"email": "mark@gmail.com"
+			},
+			{
+				"id": 2,
+				"name": "Ana",
+				"email": "ana@gmail.com"
+			},
+			{
+				"id": 3,
+				"name": "George",
+				"email": "george@gmail.com"
+			},
+			{
+				"id": 4,
+				"name": "Tom",
+				"email": "tom@gmail.com"
+			},
+			{
+				"id": 5,
+				"name": "Angela",
+				"email": "angela@gmail.com"
+			},
+			{
+				"id": 6,
+				"name": "Chris",
+				"email": "chris@gmail.com"
+			},
+			{
+				"id": 7,
+				"name": "Dave",
+				"email": "dave@gmail.com"
+			},
+			{
+				"id": 8,
+				"name": "Nicole",
+				"email": "nicole@gmail.com"
+			},
+			{
+				"id": 9,
+				"name": "Charlie",
+				"email": "charlie@gmail.com"
+			},
+			{
+				"id": 10,
+				"name": "Diana",
+				"email": "diana@gmail.com"
+			}
+		]
+	}
+}

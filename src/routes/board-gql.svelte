@@ -44,8 +44,8 @@
 	import {
 		UPDATE_CARD_WEIGHT_AND_COLUMN_MUTATION,
 		UPDATE_CARD_WEIGHT_MUTATION
-	} from '../../graphql/card';
-	import { UPDATE_COLUMN_WEIGHT_MUTATION } from '../../graphql/column';
+	} from '../../graphql/js/card';
+	import { UPDATE_COLUMN_WEIGHT_MUTATION } from '../../graphql/js/column';
 
 	overrideItemIdKeyNameBeforeInitialisingDndZones('_id');
 
