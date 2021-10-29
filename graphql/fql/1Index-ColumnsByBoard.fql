@@ -1,0 +1,13 @@
+CreateIndex(
+    {
+      name: "columnsByBoard",
+      unique: false,
+      serialized: true,
+      source: Collection("Column"),
+      terms: [
+        {
+          field: ["data", "board"]
+        }
+      ]
+    }
+)

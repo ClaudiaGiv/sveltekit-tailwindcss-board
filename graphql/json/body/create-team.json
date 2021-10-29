@@ -1,0 +1,11 @@
+{
+	"query": "mutation createTeam($team: [TeamInput!]) {\n\tcreateTeam(data: $team) {\n\t\t_id\n\t\tname\n\t\tusers {\n\t\t\t_id\n\t\t\temail\n\t\t}\n\t}\n}\n",
+	"variables": {
+		"team": {
+			"name": "team1",
+			"users": {
+				"connect": ["1", "2"]
+			}
+		}
+	}
+}

@@ -1,0 +1,14 @@
+CreateIndex(
+    {
+      name: "cardsByColumn",
+      unique: false,
+      serialized: true,
+      source: Collection("Card"),
+      terms: [
+        {
+          field: ["data", "column"]
+        }
+      ]
+    }
+)
+

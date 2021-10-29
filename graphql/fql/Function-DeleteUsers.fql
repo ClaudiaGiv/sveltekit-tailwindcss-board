@@ -1,0 +1,17 @@
+CreateFunction({
+    name: "DeleteUsers",
+    body:
+        Query(
+            Lambda([],
+                Map(
+                  Paginate(
+                    Documents(Collection('User'))
+                  ),
+                  Lambda(
+                    ['ref'],
+                    Delete(Var('ref'))
+                  )
+                )
+            )
+        )
+})

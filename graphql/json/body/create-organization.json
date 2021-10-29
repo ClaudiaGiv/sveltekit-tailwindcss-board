@@ -1,0 +1,36 @@
+{
+	"query": "mutation createOrganization($organization: [OrganizationInput!]) {\n    createOrganization(data: $organization) {\n        _id\n        name\n        teams{\n            data{\n                _id\n                name\n            }\n        }\n        users {\n            data{\n                _id\n                email\n            }\n        }\n        admins {\n            data{\n                _id\n                email\n            }\n        }\n    }\n}",
+	"variables": {
+		"organization": {
+			"name": "Value Factory",
+			"teams": {
+				"create": [
+					{
+						"name": "Team 1",
+						"users": {
+							"connect": ["1", "2", "3"]
+						}
+					},
+					{
+						"name": "Team 2",
+						"users": {
+							"connect": ["4", "5", "6"]
+						}
+					},
+					{
+						"name": "Team 3",
+						"users": {
+							"connect": ["7", "8", "9", "10"]
+						}
+					}
+				]
+			},
+			"admins": {
+				"connect": ["1"]
+			},
+			"users": {
+				"connect": ["2", "3", "4", "5", "6", "7", "8", "9", "10"]
+			}
+		}
+	}
+}

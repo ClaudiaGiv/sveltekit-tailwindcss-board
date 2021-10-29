@@ -1,10 +1,10 @@
 mutation createTeam($team: [TeamInput!]) {
-    createTeam(data: $team) {
-        _id
-        name
-        users{
-            _id
-            email
-        }
-    }
+	createTeam(data: $team) {
+		_id
+		name
+		users {
+			_id
+			email
+		}
+	}
 }

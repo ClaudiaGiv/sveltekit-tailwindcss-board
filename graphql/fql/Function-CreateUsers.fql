@@ -1,0 +1,32 @@
+CreateFunction({
+    name: "CreateUsers",
+    body:
+        Query(
+          Lambda(
+            ["users"],
+            Map(
+              Var("users"),
+              Lambda("user",
+                  If(ContainsPath("id", Var("user")),
+                      Do(Create(Ref(Collection("User"), Select(["id"], Var("user"))),
+                      {
+                        data: {
+                          email: Select(["email"], Var("user")),
+                          name: Select(["name"], Var("user"))
+                        }
+
+                      }
+                      )),
+                      Create(Collection("User"),
+                          {
+                            data: Var("user")
+                          }
+                      )
+                  )
+              )
+            )
+          )
+        )
+})
+
+
