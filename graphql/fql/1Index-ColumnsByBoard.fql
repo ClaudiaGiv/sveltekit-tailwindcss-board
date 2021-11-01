@@ -1,4 +1,7 @@
-CreateIndex(
+If(
+  Exists(Index('columnsByBoard')),
+  "The index: 'columnsByBoard' already exists",
+  CreateIndex(
     {
       name: "columnsByBoard",
       unique: false,
@@ -10,4 +13,5 @@ CreateIndex(
         }
       ]
     }
+  )
 )

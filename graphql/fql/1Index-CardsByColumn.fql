@@ -1,4 +1,7 @@
-CreateIndex(
+If(
+  Exists(Index('cardsByColumn')),
+  "The index: 'cardsByColumn' already exists",
+  CreateIndex(
     {
       name: "cardsByColumn",
       unique: false,
@@ -10,5 +13,6 @@ CreateIndex(
         }
       ]
     }
+  )
 )
 

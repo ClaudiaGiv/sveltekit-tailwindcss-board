@@ -1,4 +1,7 @@
-CreateFunction({
+If(
+  Exists(Function('MoveCards')),
+  "The function: 'MoveCards' already exists",
+  CreateFunction({
     name: "MoveCards",
     body:
         Query(
@@ -20,4 +23,5 @@ CreateFunction({
             )
           )
         )
-})
+  })
+)

@@ -1,4 +1,7 @@
-CreateFunction({
+If(
+  Exists(Function('DeleteUsers')),
+  "The function: 'DeleteUsers' already exists",
+  CreateFunction({
     name: "DeleteUsers",
     body:
         Query(
@@ -14,4 +17,5 @@ CreateFunction({
                 )
             )
         )
-})
+  })
+)

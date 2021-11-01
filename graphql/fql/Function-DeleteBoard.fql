@@ -1,4 +1,7 @@
-CreateFunction({
+If(
+  Exists(Function('DeleteBoard')),
+  "The function: 'DeleteBoard' already exists",
+  CreateFunction({
     name: "DeleteBoard",
     body:
         Query(
@@ -35,3 +38,4 @@ CreateFunction({
           )
         )
 })
+)
